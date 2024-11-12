@@ -13,7 +13,7 @@ export default function Card({ word, color, isRevealed, isSpymasterView }: CardP
   };
 
   return (
-    <div className="relative">
+    <div className="relative  transform transition-transform hover:scale-105">
       <img 
         src="/src/assets/card-front.png" 
         alt="Card background" 
