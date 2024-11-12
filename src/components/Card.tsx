@@ -1,4 +1,5 @@
 import { CardType } from '../Game';
+import cardFrontImage from '../assets/card-front.png';
 
 type CardProps = CardType & {
   isSpymasterView: boolean;
@@ -15,7 +16,7 @@ export default function Card({ word, color, isRevealed, isSpymasterView }: CardP
   return (
     <div className="relative  transform transition-transform hover:scale-105">
       <img 
-        src="/src/assets/card-front.png" 
+        src={cardFrontImage} 
         alt="Card background" 
         className="w-full"
       />
