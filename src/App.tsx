@@ -21,7 +21,7 @@ const handleSpymasterTest = async (gameState: GameState) => {
 }
 
 export default function App() {
-  const [gameState, setGameState] = useState<GameState>(initializeGameState())
+  const [gameState] = useState<GameState>(initializeGameState())
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-800 to-slate-600 p-4 flex items-center justify-center">
