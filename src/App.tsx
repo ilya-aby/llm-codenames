@@ -1,21 +1,29 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Card from './components/Card';
 import { Chat, ChatMessage } from './components/Chat';
-import { GameState, initializeGameState, updateGameState } from './Game';
+import {
+  GameState,
+  initializeGameState,
+  updateGameStateFromOperativeMove,
+  updateGameStateFromSpymasterMove,
+} from './Game';
 import { createRolePrompt } from './prompts/rolePrompt';
 
-type AppState = 'paused' | 'ready_for_turn' | 'waiting_for_response' | 'error';
+type AppState = 'paused' | 'ready_for_turn' | 'waiting_for_response' | 'error' | 'game_over';
 
 export default function App() {
   const [gameState, setGameState] = useState<GameState>(initializeGameState());
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [appState, setAppState] = useState<AppState>('paused');
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchResponse = async () => {
       const prompt = createRolePrompt(gameState);
       console.log('Prompt:', prompt);
       try {
+        // Add 5 second delay before making the request
+        await new Promise((resolve) => setTimeout(resolve, 5000));
         const response = await fetch('/.netlify/functions/llm-proxy', {
           method: 'POST',
           headers: {
@@ -35,18 +43,31 @@ export default function App() {
             team: gameState.currentTeam,
           },
         ]);
-        setGameState(updateGameState(gameState, data));
+        if (gameState.currentRole === 'spymaster') {
+          setGameState(updateGameStateFromSpymasterMove(gameState, data));
+        } else {
+          setGameState(updateGameStateFromOperativeMove(gameState, data));
+        }
         setAppState('ready_for_turn');
       } catch (error) {
         console.error('Error fetching response:', error);
         setAppState('error');
       }
     };
-    if (appState === 'ready_for_turn') {
+    if (gameState.gameWinner) {
+      setAppState('game_over');
+    } else if (appState === 'ready_for_turn') {
       setAppState('waiting_for_response');
       fetchResponse();
     }
   }, [appState, gameState]);
+
+  // Handle scrolling to the bottom of the chat history as chats stream in
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [chatHistory]);
 
   return (
     <div className='min-h-screen flex flex-col gap-2 items-center justify-around bg-gradient-to-br from-slate-800 to-slate-600 p-1 lg:flex-row sm:px-4'>
@@ -58,12 +79,15 @@ export default function App() {
             word={card.word}
             color={card.color}
             isRevealed={card.isRevealed}
-            isSpymasterView={gameState.currentRole === 'spymaster'}
+            isSpymasterView={true} // Temporarily locking to see if more interesting this way
           />
         ))}
       </div>
       {/* Chat history */}
-      <div className='w-full h-screen max-w-4xl self-start lg:w-1/3 lg:border-l lg:border-slate-200 lg:pl-4 lg:ml-4 py-2'>
+      <div
+        ref={chatContainerRef}
+        className='w-full h-screen max-w-4xl self-start lg:w-1/3 lg:border-l lg:border-slate-200 lg:pl-4 lg:ml-4 py-2 overflow-y-auto'
+      >
         {chatHistory.map((message, index) => (
           <Chat key={index} {...message} />
         ))}

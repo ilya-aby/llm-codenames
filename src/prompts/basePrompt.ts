@@ -49,6 +49,10 @@ At the end, you'll be asked to play a turn in your given role.
 - It's smart to always take extra care not to give clues that the field operative could think relate to the other team's cards or the assassin
 - If you only have a few cards left to guess and are well ahead, you can play more conservatively and give lower numbers
 - If you're behind and need to catch up, you can take more risks and give higher numbers
+- If one of your team's cards is thematically similar to the assassin or the other team's cards, you should think extra carefully when clueing
+to avoid your operative teammate accidentally guessing the assassin or the other team's cards. For example, if you're the blue spymaster
+and FLUTE is a blue card while OPERA is an assassin black card, "MUSIC, 2" is a really bad clue because your teammate will likely get FLUTE,
+but then they'll also likely guess OPERA next and instantly lose you the game.
 
 ### Field Operative Guessing Strategy
 - At the most fundamental level, think about which words on the board are most related to the clue you've been given

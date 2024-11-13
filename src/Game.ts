@@ -11,18 +11,16 @@ export type CardType = {
   isRevealed: boolean;
 };
 
-export type SpymasterResponse = {
+export type SpymasterMove = {
   clue: string;
   number: number;
   reasoning: string;
 };
 
-export type OperativeResponse = {
+export type OperativeMove = {
   guesses: string[];
   reasoning: string;
 };
-
-export type AIResponse = SpymasterResponse | OperativeResponse;
 
 // Game state
 export type GameState = {
@@ -35,6 +33,7 @@ export type GameState = {
     clueText: string;
     number: number;
   };
+  gameWinner?: TeamColor;
 };
 
 // Initialize new game state
@@ -83,36 +82,70 @@ export const drawNewCards = (): CardType[] => {
   return gameCards;
 };
 
-export function updateGameState(currentState: GameState, aiResponse: AIResponse): GameState {
+// Set the guess properties and switch to operative role
+export function updateGameStateFromSpymasterMove(
+  currentState: GameState,
+  move: SpymasterMove
+): GameState {
+  const newState = { ...currentState };
+  newState.currentClue = {
+    clueText: move.clue,
+    number: move.number,
+  };
+  newState.currentRole = 'operative';
+  return newState;
+}
+
+// Make guesses and switch to spymaster role
+export function updateGameStateFromOperativeMove(
+  currentState: GameState,
+  move: OperativeMove
+): GameState {
   const newState = { ...currentState };
 
-  if (currentState.currentRole === 'spymaster') {
-    newState.currentClue = {
-      clueText: (aiResponse as SpymasterResponse).clue,
-      number: (aiResponse as SpymasterResponse).number,
-    };
-    newState.currentRole = 'operative';
-  } else {
-    // TODO: Implement guessing logic
-    // const guesses = (aiResponse as OperativeResponse).guesses;
-    // guesses.forEach((guess) => {
-    //   const card = newState.cards.find(
-    //     (card) => card.word.toUpperCase() === guess.toUpperCase()
-    //   );
-    //   if (card) {
-    //     card.isRevealed = true;
-    //   }
-    // });
-    newState.currentRole = 'spymaster';
-    newState.currentTeam = currentState.currentTeam === 'red' ? 'blue' : 'red';
+  for (const guess of move.guesses) {
+    const card = newState.cards.find((card) => card.word.toUpperCase() === guess.toUpperCase());
+
+    // If card not found or already revealed, it's an invalid guess
+    if (!card || card.isRevealed) {
+      console.error(`INVALID GUESS: ${guess}`);
+      continue;
+    }
+
+    card.isRevealed = true;
+
+    // Assassin card instantly loses the game
+    if (card.color === 'black') {
+      newState.gameWinner = currentState.currentTeam === 'red' ? 'blue' : 'red';
+      return newState;
+    }
+
+    // Decrement the count of remaining cards for the team
+    if (card.color === 'red') {
+      newState.remainingRed--;
+    } else if (card.color === 'blue') {
+      newState.remainingBlue--;
+    }
+
+    // If no more cards remain for the team, they win
+    if (newState.remainingRed === 0) {
+      newState.gameWinner = 'red';
+      return newState;
+    } else if (newState.remainingBlue === 0) {
+      newState.gameWinner = 'blue';
+      return newState;
+    }
+
+    // If we guessed a card that isn't our team's color, we're done
+    if (card.color !== currentState.currentTeam) {
+      break;
+    }
   }
 
-  // Update relevant game state properties
-  // For example:
-  // - Mark cards as revealed
-  // - Switch teams
-  // - Switch roles
-  // - Update score
+  // Switch to the other team's spymaster once we're done guessing
+  newState.currentRole = 'spymaster';
+  newState.currentTeam = currentState.currentTeam === 'red' ? 'blue' : 'red';
+  newState.currentClue = undefined;
 
   return newState;
 }

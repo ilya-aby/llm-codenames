@@ -17,7 +17,9 @@ export default function Card({ word, color, isRevealed, isSpymasterView }: CardP
         />
       )}
       {/* Full-color mask for revealed cards */}
-      {isRevealed && <div className={`absolute inset-0 ${colorMap[color]} opacity-80`} />}
+      {isRevealed && (
+        <div className={`absolute inset-0 ${colorMap[color]} opacity-80 rounded-lg`} />
+      )}
       {/* Word overlay */}
       <div className='absolute inset-0 flex items-center justify-center'>
         <span className='font-bold text-xs md:text-base mt-[30%]'>{word}</span>
