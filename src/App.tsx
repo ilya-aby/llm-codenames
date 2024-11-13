@@ -24,8 +24,8 @@ export default function App() {
   const [gameState] = useState<GameState>(initializeGameState());
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-slate-800 to-slate-600 p-4 flex items-center justify-center'>
-      <div className='grid grid-cols-5 gap-4 max-w-3xl'>
+    <div className='min-h-screen bg-gradient-to-br from-slate-800 to-slate-600 p-1 flex items-center justify-center sm:p-4'>
+      <div className='grid grid-cols-5 gap-2 max-w-4xl md:gap-4'>
         {gameState.cards.map((card, index) => (
           <Card
             key={index}

@@ -27,7 +27,7 @@ export default function Card({ word, color, isRevealed, isSpymasterView }: CardP
         <div className={`absolute top-0 left-0 w-full h-full ${colorMap[color]} opacity-80`} />
       )}
       {/* Word overlay */}
-      <div className='absolute bottom-2 left-0 right-0 text-center font-bold text-xs sm:text-base sm:bottom-3'>
+      <div className='absolute bottom-2 left-0 right-0 text-center font-bold text-xs sm:bottom-3 md:text-base md:bottom-4'>
         {word}
       </div>
     </div>
