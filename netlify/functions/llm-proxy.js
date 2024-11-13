@@ -1,5 +1,5 @@
-import OpenAI from 'openai';
 import dotenv from 'dotenv';
+import OpenAI from 'openai';
 import process from 'process';
 
 const LLM_MODEL = 'openai/gpt-4o';

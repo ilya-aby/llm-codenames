@@ -1,4 +1,4 @@
-import wordlist from './assets/wordlist-eng.txt?raw'
+import wordlist from './assets/wordlist-eng.txt?raw';
 
 // Core types
 export type TeamColor = 'red' | 'blue';
@@ -9,7 +9,7 @@ export type CardType = {
   word: string;
   color: CardColor;
   isRevealed: boolean;
-}
+};
 
 // Game state
 export type GameState = {
@@ -22,7 +22,7 @@ export type GameState = {
     word: string;
     number: number;
   };
-}
+};
 
 // Initialize new game state
 export const initializeGameState = (): GameState => {
@@ -32,20 +32,20 @@ export const initializeGameState = (): GameState => {
     currentRole: 'spymaster',
     remainingRed: 9,
     remainingBlue: 8,
-  }
-}
+  };
+};
 
 export const drawNewCards = (): CardType[] => {
-  const allWords = wordlist.split('\n').filter(word => word.trim() !== '')
-  const gameCards: CardType[] = []
-        
+  const allWords = wordlist.split('\n').filter((word) => word.trim() !== '');
+  const gameCards: CardType[] = [];
+
   // Randomly select 25 words
-  const selectedWords = []
-  const tempWords = [...allWords]
+  const selectedWords = [];
+  const tempWords = [...allWords];
   for (let i = 0; i < 25; i++) {
-    const randomIndex = Math.floor(Math.random() * tempWords.length)
-    selectedWords.push(tempWords[randomIndex])
-    tempWords.splice(randomIndex, 1)
+    const randomIndex = Math.floor(Math.random() * tempWords.length);
+    selectedWords.push(tempWords[randomIndex]);
+    tempWords.splice(randomIndex, 1);
   }
 
   // Team assignment counts for randomization
@@ -53,19 +53,19 @@ export const drawNewCards = (): CardType[] => {
     ...Array(9).fill('red'),
     ...Array(8).fill('blue'),
     ...Array(1).fill('black'),
-    ...Array(7).fill('neutral')
-  ]
+    ...Array(7).fill('neutral'),
+  ];
 
   // Randomly assign teams to words
   selectedWords.forEach((word) => {
-    const randomIndex = Math.floor(Math.random() * teams.length)
+    const randomIndex = Math.floor(Math.random() * teams.length);
     gameCards.push({
       word,
       color: teams[randomIndex],
-      isRevealed: false
-    })
-    teams.splice(randomIndex, 1)
-  })
-    
-  return gameCards
-}
+      isRevealed: false,
+    });
+    teams.splice(randomIndex, 1);
+  });
+
+  return gameCards;
+};
