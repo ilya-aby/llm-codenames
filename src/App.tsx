@@ -1,48 +1,52 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Card from './components/Card';
 import { Chat, ChatMessage } from './components/Chat';
-import { GameState, initializeGameState } from './Game';
-import { createSpymasterPrompt } from './prompts/spymasterPrompt';
+import { GameState, initializeGameState, updateGameState } from './Game';
+import { createRolePrompt } from './prompts/rolePrompt';
 
-const handleSpymasterTest = async (
-  gameState: GameState,
-  addChatMessage: (message: ChatMessage) => void
-) => {
-  const prompt = createSpymasterPrompt(gameState);
-  try {
-    const response = await fetch('/.netlify/functions/llm-proxy', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ prompt: prompt }),
-    });
-    const data = await response.json();
-    console.log('Spymaster response:', data);
-    addChatMessage({
-      message: data.reasoning,
-      name: 'Red Spymaster (ChatGPT 4o-mini)',
-      initials: '4om',
-      team: 'red',
-    });
-    // addChatMessage({
-    //   message: data.clue + ' ' + data.number,
-    //   name: 'Red Spymaster (ChatGPT 4o-mini)',
-    //   initials: '4om',
-    //   team: 'red',
-    // });
-  } catch (error) {
-    console.error('Error testing spymaster:', error);
-  }
-};
+type AppState = 'paused' | 'ready_for_turn' | 'waiting_for_response' | 'error';
 
 export default function App() {
-  const [gameState] = useState<GameState>(initializeGameState());
+  const [gameState, setGameState] = useState<GameState>(initializeGameState());
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
+  const [appState, setAppState] = useState<AppState>('paused');
 
-  const addChatMessage = (message: ChatMessage) => {
-    setChatHistory((prev) => [...prev, message]);
-  };
+  useEffect(() => {
+    const fetchResponse = async () => {
+      const prompt = createRolePrompt(gameState);
+      console.log('Prompt:', prompt);
+      try {
+        const response = await fetch('/.netlify/functions/llm-proxy', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ prompt: prompt }),
+        });
+        const data = await response.json();
+        console.log('Response:', data);
+
+        setChatHistory((prev) => [
+          ...prev,
+          {
+            message: data.reasoning,
+            name: gameState.currentRole,
+            initials: '4om',
+            team: gameState.currentTeam,
+          },
+        ]);
+        setGameState(updateGameState(gameState, data));
+        setAppState('ready_for_turn');
+      } catch (error) {
+        console.error('Error fetching response:', error);
+        setAppState('error');
+      }
+    };
+    if (appState === 'ready_for_turn') {
+      setAppState('waiting_for_response');
+      fetchResponse();
+    }
+  }, [appState, gameState]);
 
   return (
     <div className='min-h-screen flex flex-col gap-2 items-center justify-around bg-gradient-to-br from-slate-800 to-slate-600 p-1 lg:flex-row sm:px-4'>
@@ -65,10 +69,12 @@ export default function App() {
         ))}
       </div>
       <button
-        onClick={() => handleSpymasterTest(gameState, addChatMessage)}
+        onClick={() =>
+          setAppState((current) => (current === 'paused' ? 'ready_for_turn' : 'paused'))
+        }
         className='absolute bottom-4 left-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
       >
-        Test Spymaster
+        {appState === 'paused' ? 'Start Game' : 'Pause Game'}
       </button>
     </div>
   );

@@ -16,7 +16,7 @@ export function Chat({ message, name, initials, team }: ChatMessage) {
         <div
           className={`w-10 h-10 rounded-full ${colorMap[team]} flex items-center justify-center text-white text-sm font-medium`}
         >
-          {initials.toUpperCase()}
+          {initials}
         </div>
       </div>
       {/* Chat message */}

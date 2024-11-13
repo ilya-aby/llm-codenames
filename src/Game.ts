@@ -11,6 +11,19 @@ export type CardType = {
   isRevealed: boolean;
 };
 
+export type SpymasterResponse = {
+  clue: string;
+  number: number;
+  reasoning: string;
+};
+
+export type OperativeResponse = {
+  guesses: string[];
+  reasoning: string;
+};
+
+export type AIResponse = SpymasterResponse | OperativeResponse;
+
 // Game state
 export type GameState = {
   cards: CardType[];
@@ -19,7 +32,7 @@ export type GameState = {
   remainingRed: number;
   remainingBlue: number;
   currentClue?: {
-    word: string;
+    clueText: string;
     number: number;
   };
 };
@@ -69,3 +82,37 @@ export const drawNewCards = (): CardType[] => {
 
   return gameCards;
 };
+
+export function updateGameState(currentState: GameState, aiResponse: AIResponse): GameState {
+  const newState = { ...currentState };
+
+  if (currentState.currentRole === 'spymaster') {
+    newState.currentClue = {
+      clueText: (aiResponse as SpymasterResponse).clue,
+      number: (aiResponse as SpymasterResponse).number,
+    };
+    newState.currentRole = 'operative';
+  } else {
+    // TODO: Implement guessing logic
+    // const guesses = (aiResponse as OperativeResponse).guesses;
+    // guesses.forEach((guess) => {
+    //   const card = newState.cards.find(
+    //     (card) => card.word.toUpperCase() === guess.toUpperCase()
+    //   );
+    //   if (card) {
+    //     card.isRevealed = true;
+    //   }
+    // });
+    newState.currentRole = 'spymaster';
+    newState.currentTeam = currentState.currentTeam === 'red' ? 'blue' : 'red';
+  }
+
+  // Update relevant game state properties
+  // For example:
+  // - Mark cards as revealed
+  // - Switch teams
+  // - Switch roles
+  // - Update score
+
+  return newState;
+}

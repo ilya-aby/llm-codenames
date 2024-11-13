@@ -1,7 +1,6 @@
-import { GameState } from "../Game";
-
-export const createSpymasterPrompt = (gameState: GameState): string => `
-You're playing the game Codenames. You're playing the role of spymaster.
+export const basePrompt: string = `
+You're playing the game Codenames. You'll get an overview of the rules, the current state of the game, and your role.
+At the end, you'll be asked to play a turn in your given role.
 
 ### Game Rules
 - Four players are split into two teams of two players each: Red and Blue
@@ -43,7 +42,7 @@ You're playing the game Codenames. You're playing the role of spymaster.
 - You can use ISLAND as a valid clue for ENGLAND because it's about the meaning of the words
 - Proper nouns are allowed as long as they follow the above rules. For example, you can use GEORGE WASHINGTON, JUSTIN BIEBER, or SOUTH DAKOTA as valid clues
 
-### Spymaster Clue Strategy
+### Spymaster Clue-Giving Strategy
 - It's smart to consider risk vs. reward when giving clues
 - If you give clues with low numbers, you might not reveal enough of your team's cards to win the game
 - If you give clues with high numbers but the associations are weak, the field operative might guess the wrong cards and the turn will end
@@ -51,27 +50,15 @@ You're playing the game Codenames. You're playing the role of spymaster.
 - If you only have a few cards left to guess and are well ahead, you can play more conservatively and give lower numbers
 - If you're behind and need to catch up, you can take more risks and give higher numbers
 
-### Game State
-Your Team: ${gameState.currentTeam}
-Your Role: Spymaster
-Red Cards Left to Guess: ${gameState.remainingRed}
-Blue Cards Left to Guess: ${gameState.remainingBlue}
-
-Board: ${JSON.stringify(gameState.cards)}
-
-### Output Format
-In addition to the clue and number as described above, you should also include a reasoning string that explains your thought process for choosing the clue and number.
-This will not be shown to the field operative but will help you improve your strategy. 
-Reason about why you chose the clue and number you did, what cards you're hoping to get your field operative to guess, and any other considerations you took into account.
-Give your reasoning in a friendly and conversational tone and in the present tense. For example, "Ok, I see a good grouping of sports-related words, but I'm concerned that the operative might guess SPIKE, which is the assassin, so I'll try a movie reference instead and try for a smaller number."
-
-Remember to follow the clue format rules described above. Most importantly, the clue cannot contain any words in the grid or be a substing/superset of any words in the grid.
-And it must be a SINGLE WORD unless it's a proper noun.
-
-Return a valid JSON object with the following structure:
-{
-  "clue": "string",
-  "number": "number",
-  "reasoning": "string"
-}
+### Field Operative Guessing Strategy
+- At the most fundamental level, think about which words on the board are most related to the clue you've been given
+- Codenames is a game of associations, so think about which words on the board are most strongly associated with the clue
+- Sometimes the association is very obvious, but other times it's more subtle and you'll need to think laterally
+- Consider risk vs. reward when guessing. If your team is well ahead, you may want to take fewer risks and vice versa
+- Consider your confidence in how strongly the clue is associated with the words you're guessing
+- Consider the context of prior turns if some have already been played. For example, if you were given "FRUIT, 3"
+in a previous turn and got 2 of them correct but the third one wrong, you could use one of your guesses in a later turn
+to "pick up" the third one you missed if you now realize what it was
+- Similarly, pay attention to your opponent spymaster's clues and try to pick up on which cards they might be targeting, because
+that could help you steer away from those cards, since they're likely to be the opposite team's color
 `;
