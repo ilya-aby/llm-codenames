@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Card from './components/Card';
-import { Chat, ChatMessage } from './components/Chat';
+import { Chat } from './components/Chat';
 import {
   GameState,
   initializeGameState,
@@ -13,7 +13,6 @@ type AppState = 'paused' | 'ready_for_turn' | 'waiting_for_response' | 'error' |
 
 export default function App() {
   const [gameState, setGameState] = useState<GameState>(initializeGameState());
-  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [appState, setAppState] = useState<AppState>('paused');
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
@@ -34,15 +33,6 @@ export default function App() {
         const data = await response.json();
         console.log('Response:', data);
 
-        setChatHistory((prev) => [
-          ...prev,
-          {
-            message: data.reasoning,
-            name: gameState.currentRole,
-            initials: '4om',
-            team: gameState.currentTeam,
-          },
-        ]);
         if (gameState.currentRole === 'spymaster') {
           setGameState(updateGameStateFromSpymasterMove(gameState, data));
         } else {
@@ -67,7 +57,7 @@ export default function App() {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
-  }, [chatHistory]);
+  }, [gameState]);
 
   return (
     <div className='min-h-screen flex flex-col gap-2 items-center justify-around bg-gradient-to-br from-slate-800 to-slate-600 p-1 lg:flex-row sm:px-4'>
@@ -86,9 +76,9 @@ export default function App() {
       {/* Chat history */}
       <div
         ref={chatContainerRef}
-        className='w-full h-screen max-w-4xl self-start lg:w-1/3 lg:border-l lg:border-slate-200 lg:pl-4 lg:ml-4 py-2 overflow-y-auto'
+        className='w-full h-screen max-w-4xl self-start lg:w-1/3 lg:border-l lg:border-slate-500/30 lg:pl-4 lg:ml-4 py-2 overflow-y-auto'
       >
-        {chatHistory.map((message, index) => (
+        {gameState.chatHistory.map((message, index) => (
           <Chat key={index} {...message} />
         ))}
       </div>

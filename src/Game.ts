@@ -1,4 +1,5 @@
 import wordlist from './assets/wordlist-eng.txt?raw';
+import { ChatMessage } from './components/Chat';
 
 // Core types
 export type TeamColor = 'red' | 'blue';
@@ -25,6 +26,7 @@ export type OperativeMove = {
 // Game state
 export type GameState = {
   cards: CardType[];
+  chatHistory: ChatMessage[];
   currentTeam: TeamColor;
   currentRole: Role;
   remainingRed: number;
@@ -44,6 +46,7 @@ export const initializeGameState = (): GameState => {
     currentRole: 'spymaster',
     remainingRed: 9,
     remainingBlue: 8,
+    chatHistory: [],
   };
 };
 
@@ -92,6 +95,12 @@ export function updateGameStateFromSpymasterMove(
     clueText: move.clue,
     number: move.number,
   };
+  newState.chatHistory.push({
+    message: move.reasoning + '\n\n' + move.clue + ', ' + move.number,
+    name: currentState.currentTeam + ' Spymaster',
+    initials: 'SM',
+    team: currentState.currentTeam,
+  });
   newState.currentRole = 'operative';
   return newState;
 }
@@ -102,6 +111,12 @@ export function updateGameStateFromOperativeMove(
   move: OperativeMove
 ): GameState {
   const newState = { ...currentState };
+  newState.chatHistory.push({
+    message: move.reasoning + '\n\n' + move.guesses.join(', '),
+    name: currentState.currentTeam + ' Operative',
+    initials: 'OP',
+    team: currentState.currentTeam,
+  });
 
   for (const guess of move.guesses) {
     const card = newState.cards.find((card) => card.word.toUpperCase() === guess.toUpperCase());
