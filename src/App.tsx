@@ -21,7 +21,6 @@ export default function App() {
   useEffect(() => {
     const fetchResponse = async () => {
       const prompt = createRolePrompt(gameState);
-      console.log('Prompt:', prompt);
       try {
         // Add brief delay before making the request
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -30,10 +29,22 @@ export default function App() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ prompt: prompt }),
+          body: JSON.stringify({
+            prompt: prompt,
+            model_name:
+              gameState.agents[gameState.currentTeam][gameState.currentRole].openrouter_model_id,
+          }),
         });
+        if (!response.ok) {
+          throw new Error(`API returned ${response.status}: ${response.statusText}`);
+        }
+
         const data = await response.json();
         console.log('Response:', data);
+
+        if (data.error) {
+          throw new Error(data.error);
+        }
 
         if (gameState.currentRole === 'spymaster') {
           setGameState(updateGameStateFromSpymasterMove(gameState, data));
@@ -90,7 +101,7 @@ export default function App() {
               </>
             ) : isGamePaused ? (
               <>
-                <Play className='inline size-4' /> Unpause
+                <Play className='inline size-4' /> Continue
               </>
             ) : (
               <>
@@ -99,14 +110,16 @@ export default function App() {
             )}
           </button>
 
-          <div className='flex gap-4 text-slate-200'>
-            <div>Red Team: {gameState.remainingRed}</div>
-            <div>Blue Team: {gameState.remainingBlue}</div>
-            <div>{appState}</div>
-          </div>
-
-          <div className='text-slate-200'>
-            Current Turn: {gameState.currentRole === 'spymaster' ? 'Spymaster' : 'Operative'}
+          <div className='flex items-center gap-4 bg-slate-800/50 px-4 py-2 rounded-lg border border-slate-500/30'>
+            <div className='flex flex-col items-start gap-1'>
+              <div className='text-red-500'>{gameState.agents.red.spymaster.model_name}</div>
+              <div className='text-red-500'>{gameState.agents.red.operative.model_name}</div>
+            </div>
+            <div className='text-slate-200 font-semibold'>vs.</div>
+            <div className='flex flex-col items-start gap-1'>
+              <div className='text-blue-500'>{gameState.agents.blue.spymaster.model_name}</div>
+              <div className='text-blue-500'>{gameState.agents.blue.operative.model_name}</div>
+            </div>
           </div>
         </div>
 

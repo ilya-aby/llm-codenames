@@ -39,7 +39,7 @@ Reason about why you chose the clue and number you did, what cards you're hoping
 Give your reasoning in a friendly and conversational tone and in the present tense. For example, "Ok, I see a good grouping of sports-related words, but I'm concerned that the operative might guess SPIKE, which is the assassin, so I'll try a movie reference instead and try for a smaller number."
 
 Remember to follow the clue format rules described above. Most importantly, the clue cannot contain any words in the grid or be a substing/superset of any words in the grid.
-And it must be a SINGLE WORD unless it's a proper noun.
+And it must be a SINGLE WORD unless it's a proper noun. Your clue CANNOT just be a word that is on a card in the grid - that is an invalid clue.
 
 Return a valid JSON object with the following structure:
 {
@@ -47,6 +47,8 @@ Return a valid JSON object with the following structure:
   "number": "number",
   "reasoning": "string"
 }
+
+Your response will be parsed as JSON, so make sure you ONLY return a JSON object and do NOT wrap the object in quotes or markdown or it will break.
 `
     : `
 ### Output Format
@@ -70,5 +72,7 @@ Return a valid JSON object with the following structure:
   "guesses": ["string"],
   "reasoning": "string"
 }
+
+Your response will be parsed as JSON, so make sure you ONLY return a JSON object and do NOT wrap the object in quotes or markdown or it will break.
 `
 }`;

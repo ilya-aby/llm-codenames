@@ -1,6 +1,6 @@
 import wordlist from './assets/wordlist-eng.txt?raw';
 import { ChatMessage } from './components/Chat';
-
+import { agents, LLMModel } from './constants/models';
 // Core types
 export type TeamColor = 'red' | 'blue';
 export type CardColor = 'red' | 'blue' | 'black' | 'neutral';
@@ -23,8 +23,18 @@ export type OperativeMove = {
   reasoning: string;
 };
 
+// Nested object type for team agents to track which LLM model is being used for each role
+export type TeamAgents = {
+  [key in Role]: LLMModel;
+};
+
+export type GameAgents = {
+  [key in TeamColor]: TeamAgents;
+};
+
 // Game state
 export type GameState = {
+  agents: GameAgents;
   cards: CardType[];
   chatHistory: ChatMessage[];
   currentTeam: TeamColor;
@@ -42,6 +52,7 @@ export type GameState = {
 export const initializeGameState = (): GameState => {
   return {
     cards: drawNewCards(),
+    agents: selectRandomAgents(),
     currentTeam: 'red',
     currentRole: 'spymaster',
     remainingRed: 9,
@@ -50,7 +61,7 @@ export const initializeGameState = (): GameState => {
   };
 };
 
-export const drawNewCards = (): CardType[] => {
+const drawNewCards = (): CardType[] => {
   const allWords = wordlist.split('\n').filter((word) => word.trim() !== '');
   const gameCards: CardType[] = [];
 
@@ -85,6 +96,27 @@ export const drawNewCards = (): CardType[] => {
   return gameCards;
 };
 
+// Select 4 random agents for each team
+const selectRandomAgents = (): GameAgents => {
+  const availableAgents = [...agents];
+
+  const pickRandomAgent = () => {
+    const randomIndex = Math.floor(Math.random() * availableAgents.length);
+    return availableAgents.splice(randomIndex, 1)[0];
+  };
+
+  return {
+    red: {
+      spymaster: pickRandomAgent(),
+      operative: pickRandomAgent(),
+    },
+    blue: {
+      spymaster: pickRandomAgent(),
+      operative: pickRandomAgent(),
+    },
+  } satisfies GameAgents;
+};
+
 // Set the guess properties and switch to operative role
 export function updateGameStateFromSpymasterMove(
   currentState: GameState,
@@ -97,8 +129,8 @@ export function updateGameStateFromSpymasterMove(
   };
   newState.chatHistory.push({
     message: move.reasoning + '\n\n' + move.clue + ', ' + move.number,
-    name: currentState.currentTeam + ' Spymaster',
-    initials: 'SM',
+    name: currentState.agents[currentState.currentTeam].spymaster.model_name + ` (Spymaster)`,
+    logo: currentState.agents[currentState.currentTeam].spymaster.logo,
     team: currentState.currentTeam,
   });
   newState.currentRole = 'operative';
@@ -113,8 +145,8 @@ export function updateGameStateFromOperativeMove(
   const newState = { ...currentState };
   newState.chatHistory.push({
     message: move.reasoning + '\n\n' + move.guesses.join(', '),
-    name: currentState.currentTeam + ' Operative',
-    initials: 'OP',
+    name: currentState.agents[currentState.currentTeam].operative.model_name + ` (Operative)`,
+    logo: currentState.agents[currentState.currentTeam].operative.logo,
     team: currentState.currentTeam,
   });
 
