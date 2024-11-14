@@ -73,10 +73,9 @@ export async function handler(event) {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
-        'Netlify-CDN-Cache-Control': `public, s-maxage=${60 * 60 * 24}, stale-while-revalidate=${
-          60 * 60 * 48
-        }, durable`,
-        'Netlify-Cache-Tag': 'codenames-ai',
+        'Cache-Control': 'no-store, no-cache, must-revalidate',
+        Pragma: 'no-cache',
+        Expires: '0',
       },
       body: JSON.stringify(responseArray),
     };
