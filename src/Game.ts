@@ -96,7 +96,8 @@ const drawNewCards = (): CardType[] => {
   return gameCards;
 };
 
-// Select 4 random agents for each team
+// Select four random agents to form the two teams
+// More agents can be added by editing the `agents` array in `constants/models.ts`
 const selectRandomAgents = (): GameAgents => {
   const availableAgents = [...agents];
 

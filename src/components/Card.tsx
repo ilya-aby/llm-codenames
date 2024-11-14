@@ -1,4 +1,5 @@
 import { CardType } from '../Game';
+import assassinGif from '../assets/assassin-animated.gif';
 import cardFrontImage from '../assets/card-front.png';
 import { bgColorMap } from '../constants/colors';
 
@@ -22,9 +23,23 @@ export default function Card({ word, color, isRevealed, isSpymasterView }: CardP
           className={`absolute inset-0 ${bgColorMap[color]} opacity-80 rounded-lg overflow-hidden`}
         />
       )}
+      {/* Special animated assassin reveal */}
+      {isRevealed && color === 'black' && (
+        <img
+          src={assassinGif}
+          alt='Assassin'
+          className='flex mx-auto w-auto h-full absolute inset-0 z-10'
+        />
+      )}
       {/* Word overlay */}
       <div className='absolute inset-0 flex items-center justify-center'>
-        <span className='font-bold text-xs md:text-base mt-[30%]'>{word}</span>
+        <span
+          className={`tracking-tight font-bold text-xs md:text-base mt-[30%] z-20 ${
+            color === 'black' && isRevealed ? 'text-slate-50' : 'text-slate-800'
+          }`}
+        >
+          {word}
+        </span>
       </div>
     </div>
   );

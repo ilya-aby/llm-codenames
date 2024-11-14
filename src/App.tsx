@@ -91,7 +91,7 @@ export default function App() {
           {/* Start/Pause game button */}
           <button
             onClick={() => {
-              if (appState === 'game_over') {
+              if (appState === 'game_over' || appState === 'error') {
                 setGameState(initializeGameState());
                 setAppState('game_start');
               }
@@ -99,9 +99,9 @@ export default function App() {
             }}
             className='w-36 flex items-center justify-center gap-2 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold py-2 px-2 rounded'
           >
-            {appState === 'game_start' || appState === 'game_over' ? (
+            {appState === 'game_start' || appState === 'game_over' || appState === 'error' ? (
               <>
-                <Play className='inline size-4' /> Start Game
+                <Play className='inline size-4' /> New Game
               </>
             ) : isGamePaused ? (
               <>
@@ -145,7 +145,7 @@ export default function App() {
             <Loader2 className='animate-spin text-slate-200' />
           </div>
         )}
-        {isGamePaused && appState !== 'waiting_for_response' && (
+        {isGamePaused && appState === 'ready_for_turn' && (
           <div className='w-full sticky p-2 flex justify-end'>
             <Pause className='text-slate-200' />
           </div>
