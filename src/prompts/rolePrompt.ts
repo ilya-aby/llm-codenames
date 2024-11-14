@@ -34,7 +34,8 @@ ${
     ? `
 ### Output Format
 In addition to the clue and number as described above, you should also include a reasoning string that explains your thought process for choosing the clue and number.
-This will not be shown to the field operative but will help you improve your strategy. 
+This will not be shown to the field operative but will help you improve your strategy.
+The string should be plaintext, not markdown.
 Reason about why you chose the clue and number you did, what cards you're hoping to get your field operative to guess, and any other considerations you took into account.
 Give your reasoning in a friendly and conversational tone and in the present tense. For example, "Ok, I see a good grouping of sports-related words, but I'm concerned that the operative might guess SPIKE, which is the assassin, so I'll try a movie reference instead and try for a smaller number."
 
@@ -48,7 +49,7 @@ Return a valid JSON object with the following structure:
   "reasoning": "string"
 }
 
-Your response will be parsed as JSON, so make sure you ONLY return a JSON object and do NOT wrap the object in quotes or markdown or it will break.
+Your response will be parsed as JSON, so make sure you ONLY return a JSON object and nothing else.
 `
     : `
 ### Output Format
@@ -63,6 +64,7 @@ a fourth word that was obviously related to the clue and didn't want to risk gue
 
 In addition to the guess list, you should also include a reasoning string that explains your thought process for choosing the words you did.
 Reason about how you made sense of the board given the clue and number, and any other considerations you took into account.
+This string should be plaintext, not markdown.
 Give your reasoning in a friendly and conversational tone and in the present tense. For example, given the clue "ARCHITECTURE, 3":
 "I see a few plausible architecture-related words. I'm very confident in BRIDGE and SPAN. I'm less sure about what the third could be. 
 EMBASSY is a bit of a reach because embassies have fancy architecture. But we're behind and I'll take the risk. So I'll guess BRIDGE, SPAN, EMBASSY."
@@ -73,6 +75,6 @@ Return a valid JSON object with the following structure:
   "reasoning": "string"
 }
 
-Your response will be parsed as JSON, so make sure you ONLY return a JSON object and do NOT wrap the object in quotes or markdown or it will break.
+Your response will be parsed as JSON, so make sure you ONLY return a JSON object and nothing else.
 `
 }`;

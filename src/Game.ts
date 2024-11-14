@@ -124,7 +124,7 @@ export function updateGameStateFromSpymasterMove(
 ): GameState {
   const newState = { ...currentState };
   newState.currentClue = {
-    clueText: move.clue,
+    clueText: move.clue.toUpperCase(),
     number: move.number,
   };
   newState.chatHistory.push({
@@ -132,6 +132,7 @@ export function updateGameStateFromSpymasterMove(
     name: currentState.agents[currentState.currentTeam].spymaster.model_name + ` (Spymaster)`,
     logo: currentState.agents[currentState.currentTeam].spymaster.logo,
     team: currentState.currentTeam,
+    cards: currentState.cards,
   });
   newState.currentRole = 'operative';
   return newState;
@@ -148,6 +149,7 @@ export function updateGameStateFromOperativeMove(
     name: currentState.agents[currentState.currentTeam].operative.model_name + ` (Operative)`,
     logo: currentState.agents[currentState.currentTeam].operative.logo,
     team: currentState.currentTeam,
+    cards: currentState.cards,
   });
 
   for (const guess of move.guesses) {

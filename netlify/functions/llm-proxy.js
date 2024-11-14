@@ -59,8 +59,11 @@ export async function handler(event) {
     const rawContent = completion.choices[0].message.content;
 
     // Sometimes LLMs like Gemini and Grok return markdown code blocks starting with ```json
-    // We attempt to clean this up if it happens
-    const cleanContent = rawContent.replace(/^```json\n|\n```$/g, '');
+    // We attempt to be defensive by discarding anything outside of the first and last curly braces
+    const cleanContent = rawContent.substring(
+      rawContent.indexOf('{'),
+      rawContent.lastIndexOf('}') + 1
+    );
     console.log('Cleaned LLM response:', cleanContent);
     const responseArray = JSON.parse(cleanContent);
 
@@ -87,50 +90,3 @@ export async function handler(event) {
     };
   }
 }
-
-//       if (completion.error) {
-//       throw new Error(error.message || 'Unknown error from LLM');
-//     }
-//     const rawContent = completion.choices[0].message.content;
-//     console.log('Raw LLM response:', rawContent);
-//     responseArray = JSON.parse(rawContent);
-//   }
-//     } catch (parseError) {
-//       console.error('JSON Parse Error:', parseError);
-//       console.error('Invalid JSON content:', completion.choices[0].message.content);
-//       return {
-//         statusCode: 500,
-//         body: JSON.stringify({
-//           error: 'Invalid JSON response from LLM',
-//           details: parseError.message,
-//           rawContent: completion.choices[0].message.content,
-//         }),
-//       };
-//     }
-
-//     console.log('Parsed LLM response:', responseArray);
-//     return {
-//       statusCode: 200,
-//       headers: {
-//         'Content-Type': 'application/json',
-//         'Access-Control-Allow-Origin': '*',
-//         // Allow Netlify to cache responses
-//         'Netlify-CDN-Cache-Control': `public, s-maxage=${60 * 60 * 24}, stale-while-revalidate=${
-//           60 * 60 * 48
-//         }, durable`,
-//         // Optional cache tags for selective purging
-//         'Netlify-Cache-Tag': 'codenames-ai',
-//       },
-//       body: JSON.stringify(responseArray),
-//     };
-//   } catch (error) {
-//     console.error('LLM Proxy Error:', error);
-//     return {
-//       statusCode: 500,
-//       body: JSON.stringify({
-//         error: 'Failed to generate message',
-//         details: error.message,
-//       }),
-//     };
-//   }
-// }

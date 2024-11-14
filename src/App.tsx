@@ -82,6 +82,9 @@ export default function App() {
     <div className='min-h-screen flex flex-col gap-2 items-center justify-around bg-gradient-to-br from-slate-800 to-slate-600 lg:flex-row'>
       {/* Left column: Game board + Controls */}
       <div className='w-full lg:w-2/3 h-screen flex flex-col items-center gap-4'>
+        {appState === 'error' && (
+          <div className='text-red-500 mt-4'>An error occurred. Please try again later.</div>
+        )}
         {/* Game Controls bar */}
         <div className='sticky top-10 z-10 w-11/12 bg-slate-700/50 rounded-lg p-4 backdrop-blur-sm border border-slate-500/30 shadow-md flex justify-between items-center'>
           {/* Start/Pause game button */}
