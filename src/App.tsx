@@ -126,6 +126,7 @@ export default function App() {
                 word={card.word}
                 color={card.color}
                 isRevealed={card.isRevealed}
+                wasRecentlyRevealed={card.wasRecentlyRevealed}
                 isSpymasterView={true}
               />
             ))}
@@ -135,11 +136,21 @@ export default function App() {
       {/* Right panel: Chat history */}
       <div
         ref={chatContainerRef}
-        className='relative w-full h-screen max-w-4xl self-start p-2 bg-slate-700/50 backdrop-blur-sm lg:w-1/3 lg:border-l lg:border-slate-500/30 overflow-y-auto'
+        className='relative w-full h-screen max-w-4xl self-start p-2 bg-slate-600/50 backdrop-blur-sm lg:w-1/3 lg:border-l lg:border-slate-500/30 overflow-y-auto'
       >
         {gameState.chatHistory.map((message, index) => (
           <Chat key={index} {...message} />
         ))}
+        {appState === 'game_over' && (
+          <div className='w-full p-2 flex justify-center tracking-wide font-semibold'>
+            <div
+              className={`text-${gameState.gameWinner === 'red' ? 'red' : 'blue'}-500 text-base`}
+            >
+              {gameState.gameWinner === 'red' ? 'Red' : 'Blue'} team wins.
+            </div>
+          </div>
+        )}
+        {/* Spinner & Pause indicator */}
         {appState === 'waiting_for_response' && (
           <div className='w-full sticky p-2 flex justify-end'>
             <Loader2 className='animate-spin text-slate-200' />

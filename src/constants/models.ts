@@ -1,7 +1,6 @@
 // Import logos
 import anthropicLogo from '../assets/logos/anthropic.svg';
 import geminiLogo from '../assets/logos/gemini.svg';
-import metaLogo from '../assets/logos/meta.svg';
 import openaiLogo from '../assets/logos/openai.svg';
 import xaiLogo from '../assets/logos/xai.svg';
 
@@ -55,12 +54,13 @@ export const agents: LLMModel[] = [
     short_name: 'Haiku 3.5',
     logo: anthropicLogo,
   },
-  {
-    openrouter_model_id: 'meta-llama/llama-3.2-90b-vision-instruct',
-    model_name: 'Llama 3.2 90B',
-    short_name: '3.2 90B',
-    logo: metaLogo,
-  },
+  // Disabled for slow & unreliable performance
+  // {
+  //   openrouter_model_id: 'meta-llama/llama-3.2-90b-vision-instruct',
+  //   model_name: 'Llama 3.2 90B',
+  //   short_name: '3.2 90B',
+  //   logo: metaLogo,
+  // },
   {
     openrouter_model_id: 'x-ai/grok-beta',
     model_name: 'Grok Beta',

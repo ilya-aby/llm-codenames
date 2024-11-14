@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import { jsonrepair } from 'jsonrepair';
 import OpenAI from 'openai';
 import process from 'process';
 
@@ -25,7 +26,6 @@ export async function handler(event) {
   }
 
   const { prompt, model_name } = JSON.parse(event.body);
-  console.log('Server received prompt:', prompt);
 
   const openai = new OpenAI({
     baseURL: 'https://openrouter.ai/api/v1',
@@ -49,7 +49,7 @@ export async function handler(event) {
       model: model_name,
     });
 
-    console.log('Raw LLM response:', completion);
+    console.log('LLM response headers:', completion);
     console.log('Raw LLM message:', completion.choices[0].message.content);
 
     if (completion.error) {
@@ -64,8 +64,9 @@ export async function handler(event) {
       rawContent.indexOf('{'),
       rawContent.lastIndexOf('}') + 1
     );
-    console.log('Cleaned LLM response:', cleanContent);
-    const responseArray = JSON.parse(cleanContent);
+    const repairedContent = jsonrepair(cleanContent);
+    console.log('Cleaned & Repaired LLM response:', repairedContent);
+    const responseArray = JSON.parse(repairedContent);
 
     return {
       statusCode: 200,

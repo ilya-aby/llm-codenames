@@ -33,20 +33,23 @@ ${
   gameState.currentRole === 'spymaster'
     ? `
 ### Output Format
-In addition to the clue and number as described above, you should also include a reasoning string that explains your thought process for choosing the clue and number.
-This will not be shown to the field operative but will help you improve your strategy.
-The string should be plaintext, not markdown.
-Reason about why you chose the clue and number you did, what cards you're hoping to get your field operative to guess, and any other considerations you took into account.
-Give your reasoning in a friendly and conversational tone and in the present tense. For example, "Ok, I see a good grouping of sports-related words, but I'm concerned that the operative might guess SPIKE, which is the assassin, so I'll try a movie reference instead and try for a smaller number."
+You will provide your final clue and number as described above. Remember to follow the clue format rules described above. 
+Most importantly, the clue cannot contain any words in the grid or be a substing/superset of any words in the grid.
+And it must be a SINGLE WORD unless it's a proper noun, like someone's name or the name of a place or piece of media, etc.
+Your clue CANNOT be a word that is one of the words on the board - this is an invalid clue and will end the turn without any guesses.
 
-Remember to follow the clue format rules described above. Most importantly, the clue cannot contain any words in the grid or be a substing/superset of any words in the grid.
-And it must be a SINGLE WORD unless it's a proper noun. Your clue CANNOT just be a word that is on a card in the grid - that is an invalid clue.
+Before returning your final clue and number, you should start by thinking step by step and writing a reasoning string that explains your thought process.
+Reason about how you make sense of the board, what associations you see among your team's words, 
+any other considerations you're taking into account, and what cards you're hoping your field operative will guess based on your clue.
+This string should be plaintext, not markdown. Your thought process will not be shown to the field operative but will help you improve your strategy.
+Give your reasoning in a friendly and conversational tone and in the present tense. For example, 
+"Ok, I see some blue words that all relate to sports, like NET and BALL. Normally, I'd go with a sports clue, but I'm concerned that my partner might guess SPIKE, which is the assassin, so I'll try a movie reference instead and try for a smaller number."
 
 Return a valid JSON object with the following structure:
 {
+  "reasoning": "string",
   "clue": "string",
-  "number": "number",
-  "reasoning": "string"
+  "number": "number"
 }
 
 Your response will be parsed as JSON, so make sure you ONLY return a JSON object and nothing else.
@@ -62,17 +65,17 @@ For example, if you're given the clue "SEASON, 4", you might guess ["WINTER", "S
 confident that WINTER and SPRING are correct but PEPPER might not be. And you only want to guess 3 words because you couldn't find
 a fourth word that was obviously related to the clue and didn't want to risk guessing a word that was wrong.
 
-In addition to the guess list, you should also include a reasoning string that explains your thought process for choosing the words you did.
-Reason about how you made sense of the board given the clue and number, and any other considerations you took into account.
+Before you return your final guess list, you should start by thinking step by step and writing a reasoning string that explains your thought process.
+Reason about how you make sense of the clue and number with respect to the board, and any other considerations you took into account.
 This string should be plaintext, not markdown.
 Give your reasoning in a friendly and conversational tone and in the present tense. For example, given the clue "ARCHITECTURE, 3":
-"I see a few plausible architecture-related words. I'm very confident in BRIDGE and SPAN. I'm less sure about what the third could be. 
+"I see a couple of architecture-related words. I'm very confident in BRIDGE and SPAN. I'm less sure about what the third could be. 
 EMBASSY is a bit of a reach because embassies have fancy architecture. But we're behind and I'll take the risk. So I'll guess BRIDGE, SPAN, EMBASSY."
 
 Return a valid JSON object with the following structure:
 {
-  "guesses": ["string"],
-  "reasoning": "string"
+  "reasoning": "string",
+  "guesses": ["string"]
 }
 
 Your response will be parsed as JSON, so make sure you ONLY return a JSON object and nothing else.

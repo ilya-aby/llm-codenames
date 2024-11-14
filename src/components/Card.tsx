@@ -7,9 +7,19 @@ type CardProps = CardType & {
   isSpymasterView: boolean;
 };
 
-export default function Card({ word, color, isRevealed, isSpymasterView }: CardProps) {
+export default function Card({
+  word,
+  color,
+  isRevealed,
+  isSpymasterView,
+  wasRecentlyRevealed,
+}: CardProps) {
   return (
-    <div className={`relative transform transition-transform hover:scale-105 rounded-lg`}>
+    <div
+      className={`relative transform transition-transform hover:scale-105 ${
+        wasRecentlyRevealed ? 'animate-[pulse_1.1s_ease-in-out_infinite]' : ''
+      } rounded-lg`}
+    >
       <img src={cardFrontImage} alt='Card background' className='w-full' />
       {/* Colored circle for profile area to show spymaster the card color */}
       {isSpymasterView && color !== 'neutral' && !isRevealed && (

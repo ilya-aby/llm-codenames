@@ -10,6 +10,7 @@ export type CardType = {
   word: string;
   color: CardColor;
   isRevealed: boolean;
+  wasRecentlyRevealed: boolean;
 };
 
 export type SpymasterMove = {
@@ -45,6 +46,7 @@ export type GameState = {
     clueText: string;
     number: number;
   };
+  acceptedGuesses?: string[];
   gameWinner?: TeamColor;
 };
 
@@ -89,6 +91,7 @@ const drawNewCards = (): CardType[] => {
       word,
       color: teams[randomIndex],
       isRevealed: false,
+      wasRecentlyRevealed: false,
     });
     teams.splice(randomIndex, 1);
   });
@@ -116,6 +119,12 @@ const selectRandomAgents = (): GameAgents => {
       operative: pickRandomAgent(),
     },
   } satisfies GameAgents;
+};
+
+const resetAnimations = (cards: CardType[]) => {
+  cards.forEach((card) => {
+    card.wasRecentlyRevealed = false;
+  });
 };
 
 // Set the guess properties and switch to operative role
@@ -153,6 +162,9 @@ export function updateGameStateFromOperativeMove(
     cards: currentState.cards,
   });
 
+  // Reset recently revealed cards
+  resetAnimations(newState.cards);
+
   for (const guess of move.guesses) {
     const card = newState.cards.find((card) => card.word.toUpperCase() === guess.toUpperCase());
 
@@ -163,10 +175,12 @@ export function updateGameStateFromOperativeMove(
     }
 
     card.isRevealed = true;
+    card.wasRecentlyRevealed = true;
 
     // Assassin card instantly loses the game
     if (card.color === 'black') {
       newState.gameWinner = currentState.currentTeam === 'red' ? 'blue' : 'red';
+      resetAnimations(newState.cards);
       return newState;
     }
 
@@ -183,6 +197,7 @@ export function updateGameStateFromOperativeMove(
       return newState;
     } else if (newState.remainingBlue === 0) {
       newState.gameWinner = 'blue';
+      resetAnimations(newState.cards);
       return newState;
     }
 
