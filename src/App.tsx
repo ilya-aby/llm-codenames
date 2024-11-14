@@ -2,6 +2,7 @@ import { Loader2, Pause, Play } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import Card from './components/Card';
 import { Chat } from './components/Chat';
+import { Scoreboard } from './components/Scoreboard';
 import {
   GameState,
   initializeGameState,
@@ -80,7 +81,7 @@ export default function App() {
 
   return (
     <div className='min-h-screen flex flex-col gap-2 items-center justify-around bg-gradient-to-br from-slate-800 to-slate-600 lg:flex-row'>
-      {/* Left column: Game board + Controls */}
+      {/* Left panel: Game board + Controls */}
       <div className='w-full lg:w-2/3 h-screen flex flex-col items-center gap-4'>
         {appState === 'error' && (
           <div className='text-red-500 mt-4'>An error occurred. Please try again later.</div>
@@ -112,18 +113,8 @@ export default function App() {
               </>
             )}
           </button>
-
-          <div className='flex items-center gap-4 bg-slate-800/50 px-4 py-2 rounded-lg border border-slate-500/30'>
-            <div className='flex flex-col items-start gap-1'>
-              <div className='text-red-500'>{gameState.agents.red.spymaster.model_name}</div>
-              <div className='text-red-500'>{gameState.agents.red.operative.model_name}</div>
-            </div>
-            <div className='text-slate-200 font-semibold'>vs.</div>
-            <div className='flex flex-col items-start gap-1'>
-              <div className='text-blue-500'>{gameState.agents.blue.spymaster.model_name}</div>
-              <div className='text-blue-500'>{gameState.agents.blue.operative.model_name}</div>
-            </div>
-          </div>
+          {/* Scoreboard */}
+          <Scoreboard gameState={gameState} />
         </div>
 
         {/* Center the grid vertically and make it wider */}
@@ -141,7 +132,7 @@ export default function App() {
           </div>
         </div>
       </div>
-      {/* Chat history panel */}
+      {/* Right panel: Chat history */}
       <div
         ref={chatContainerRef}
         className='relative w-full h-screen max-w-4xl self-start p-2 bg-slate-700/50 backdrop-blur-sm lg:w-1/3 lg:border-l lg:border-slate-500/30 overflow-y-auto'

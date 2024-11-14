@@ -11,6 +11,8 @@ export type ChatMessage = {
 // Helper function to colorize words in the message based on the cards
 const colorizeMessage = (text: string, cards: CardType[]) => {
   return text.split(/(\s+)/).map((word, i) => {
+    // If it's whitespace or a boundary, return it unchanged
+    if (!word.trim()) return word;
     const cleanWord = word.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
     const card = cards.find((c) => c.word.toUpperCase() === cleanWord);
 
@@ -46,7 +48,7 @@ export function Chat({ message, name, team, logo, cards }: ChatMessage) {
           {name}
         </span>
         {/* Colorize the words in the message based on game cards */}
-        <p className='text-slate-300 text-sm italic'>
+        <p className='text-slate-300 text-sm italic whitespace-pre-line'>
           {cards ? colorizeMessage(message, cards) : message}
         </p>
       </div>
