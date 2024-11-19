@@ -1,3 +1,7 @@
+# For development
+/ignore
+.env
+
 # Logs
 logs
 *.log

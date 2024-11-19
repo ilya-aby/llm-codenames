@@ -11,27 +11,27 @@ Red Cards Left to Guess: ${gameState.remainingRed}
 Blue Cards Left to Guess: ${gameState.remainingBlue}
 
 Board: ${JSON.stringify(
-  gameState.currentRole === 'spymaster'
-    ? gameState.cards
-    : gameState.cards.map((card) => ({
-        word: card.word,
-        isRevealed: card.isRevealed,
-        color: card.isRevealed ? card.color : undefined,
-      }))
+  gameState.currentRole === 'spymaster' ?
+    gameState.cards
+  : gameState.cards.map((card) => ({
+      word: card.word,
+      isRevealed: card.isRevealed,
+      color: card.isRevealed ? card.color : undefined,
+    })),
 )}
 
 ${
-  gameState.currentRole === 'operative' && gameState.currentClue
-    ? `
+  gameState.currentRole === 'operative' && gameState.currentClue ?
+    `
   Your Clue: ${gameState.currentClue.clueText}
   Number: ${gameState.currentClue.number}
   `
-    : ''
+  : ''
 }
 
 ${
-  gameState.currentRole === 'spymaster'
-    ? `
+  gameState.currentRole === 'spymaster' ?
+    `
 ### Output Format
 You will provide your final clue and number as described above. Remember to follow the clue format rules described above. 
 Most importantly, the clue cannot contain any words in the grid or be a substing/superset of any words in the grid.
@@ -54,7 +54,7 @@ Return a valid JSON object with the following structure:
 
 Your response will be parsed as JSON, so make sure you ONLY return a JSON object and nothing else.
 `
-    : `
+  : `
 ### Output Format
 Based on the clue and number given by your Spymaster, you should return a list of words from the board that you want to guess.
 You do not have to guess all of the words that your Spymaster gave you a clue for.

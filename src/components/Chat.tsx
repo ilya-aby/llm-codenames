@@ -27,7 +27,7 @@ const colorizeMessage = (text: string, cards: CardType[]) => {
 
     return (
       <>
-        <span key={i} className={`${colorClasses[card.color]} font-semibold px-1 rounded`}>
+        <span key={i} className={`${colorClasses[card.color]} rounded px-1 font-semibold`}>
           {cleanWord}
         </span>{' '}
       </>
@@ -44,11 +44,11 @@ export function Chat({ message, name, team, logo, cards }: ChatMessage) {
       </div>
       {/* Chat message */}
       <div className='flex flex-col'>
-        <span className={`font-bold text-sm ${team === 'red' ? 'text-red-500' : 'text-blue-500'}`}>
+        <span className={`text-sm font-bold ${team === 'red' ? 'text-red-500' : 'text-blue-500'}`}>
           {name}
         </span>
         {/* Colorize the words in the message based on game cards */}
-        <p className='text-slate-300 text-sm italic whitespace-pre-line'>
+        <p className='whitespace-pre-line text-sm italic text-slate-300'>
           {cards ? colorizeMessage(message, cards) : message}
         </p>
       </div>

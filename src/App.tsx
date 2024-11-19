@@ -80,14 +80,14 @@ export default function App() {
   }, [gameState, appState]);
 
   return (
-    <div className='min-h-screen flex flex-col gap-2 items-center justify-around bg-gradient-to-br from-slate-800 to-slate-600 lg:flex-row'>
+    <div className='flex min-h-screen flex-col items-center justify-around gap-2 bg-gradient-to-br from-slate-800 to-slate-600 lg:flex-row'>
       {/* Left panel: Game board + Controls */}
-      <div className='w-full lg:w-2/3 h-screen flex flex-col items-center gap-4'>
+      <div className='flex h-screen w-full flex-col items-center gap-4 lg:w-2/3'>
         {appState === 'error' && (
-          <div className='text-red-500 mt-4'>An error occurred. Please try again later.</div>
+          <div className='mt-4 text-red-500'>An error occurred. Please try again later.</div>
         )}
         {/* Game Controls bar */}
-        <div className='sticky top-10 z-10 w-11/12 bg-slate-700/50 rounded-lg p-4 backdrop-blur-sm border border-slate-500/30 shadow-md flex justify-between items-center'>
+        <div className='sticky top-10 z-10 flex w-11/12 items-center justify-between rounded-lg border border-slate-500/30 bg-slate-700/50 p-4 shadow-md backdrop-blur-sm'>
           {/* Start/Pause game button */}
           <button
             onClick={() => {
@@ -97,29 +97,28 @@ export default function App() {
               }
               setIsGamePaused(!isGamePaused);
             }}
-            className='w-36 flex items-center justify-center gap-2 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold py-2 px-2 rounded'
+            className='flex w-36 items-center justify-center gap-2 rounded bg-slate-200 px-2 py-2 font-bold text-slate-800 hover:bg-slate-300'
           >
-            {appState === 'game_start' || appState === 'game_over' || appState === 'error' ? (
+            {appState === 'game_start' || appState === 'game_over' || appState === 'error' ?
               <>
                 <Play className='inline size-4' /> New Game
               </>
-            ) : isGamePaused ? (
+            : isGamePaused ?
               <>
                 <Play className='inline size-4' /> Continue
               </>
-            ) : (
-              <>
+            : <>
                 <Pause className='inline size-4' /> Pause
               </>
-            )}
+            }
           </button>
           {/* Scoreboard */}
           <Scoreboard gameState={gameState} />
         </div>
 
         {/* Center the grid vertically and make it wider */}
-        <div className='flex-grow flex items-center justify-center'>
-          <div className='w-full max-w-3xl grid grid-cols-5 gap-2 md:gap-4'>
+        <div className='flex flex-grow items-center justify-center'>
+          <div className='grid w-full max-w-3xl grid-cols-5 gap-2 md:gap-4'>
             {gameState.cards.map((card, index) => (
               <Card
                 key={index}
@@ -136,13 +135,13 @@ export default function App() {
       {/* Right panel: Chat history */}
       <div
         ref={chatContainerRef}
-        className='relative w-full h-screen max-w-4xl self-start p-2 bg-slate-600/50 backdrop-blur-sm lg:w-1/3 lg:border-l lg:border-slate-500/30 overflow-y-auto'
+        className='relative h-screen w-full max-w-4xl self-start overflow-y-auto bg-slate-600/50 p-2 backdrop-blur-sm lg:w-1/3 lg:border-l lg:border-slate-500/30'
       >
         {gameState.chatHistory.map((message, index) => (
           <Chat key={index} {...message} />
         ))}
         {appState === 'game_over' && (
-          <div className='w-full p-2 flex justify-center tracking-wide font-semibold'>
+          <div className='flex w-full justify-center p-2 font-semibold tracking-wide'>
             <div
               className={`text-${gameState.gameWinner === 'red' ? 'red' : 'blue'}-500 text-base`}
             >
@@ -152,12 +151,12 @@ export default function App() {
         )}
         {/* Spinner & Pause indicator */}
         {appState === 'waiting_for_response' && (
-          <div className='w-full sticky p-2 flex justify-end'>
+          <div className='sticky flex w-full justify-end p-2'>
             <Loader2 className='animate-spin text-slate-200' />
           </div>
         )}
         {isGamePaused && appState === 'ready_for_turn' && (
-          <div className='w-full sticky p-2 flex justify-end'>
+          <div className='sticky flex w-full justify-end p-2'>
             <Pause className='text-slate-200' />
           </div>
         )}

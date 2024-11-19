@@ -3,7 +3,7 @@ import { GameState } from '../Game';
 export function Scoreboard({ gameState }: { gameState: GameState }) {
   return (
     <div className='flex flex-col items-end rounded-lg border border-slate-500/30 bg-slate-600/50 px-5 py-2'>
-      <div className='flex relative gap-6'>
+      <div className='relative flex gap-6'>
         <div className='text-red-500'>
           {gameState.agents.red.spymaster.short_name} + {gameState.agents.red.operative.short_name}
         </div>
@@ -18,7 +18,7 @@ export function Scoreboard({ gameState }: { gameState: GameState }) {
           <div className='absolute -right-3 text-slate-200'>⏴</div>
         )}
       </div>
-      <div className='flex relative gap-6'>
+      <div className='relative flex gap-6'>
         <div className='text-blue-500'>
           {gameState.agents.blue.spymaster.short_name} +{' '}
           {gameState.agents.blue.operative.short_name}

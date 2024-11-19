@@ -130,7 +130,7 @@ const resetAnimations = (cards: CardType[]) => {
 // Set the guess properties and switch to operative role
 export function updateGameStateFromSpymasterMove(
   currentState: GameState,
-  move: SpymasterMove
+  move: SpymasterMove,
 ): GameState {
   const newState = { ...currentState };
   newState.currentClue = {
@@ -151,7 +151,7 @@ export function updateGameStateFromSpymasterMove(
 // Make guesses and switch to spymaster role
 export function updateGameStateFromOperativeMove(
   currentState: GameState,
-  move: OperativeMove
+  move: OperativeMove,
 ): GameState {
   const newState = { ...currentState };
   newState.chatHistory.push({

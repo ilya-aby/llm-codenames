@@ -24,13 +24,13 @@ export default function Card({
       {/* Colored circle for profile area to show spymaster the card color */}
       {isSpymasterView && color !== 'neutral' && !isRevealed && (
         <div
-          className={`absolute top-[18%] left-[12%] w-[15%] aspect-square ${bgColorMap[color]} opacity-80 rounded-sm`}
+          className={`absolute left-[12%] top-[18%] aspect-square w-[15%] ${bgColorMap[color]} rounded-sm opacity-80`}
         />
       )}
       {/* Full-color mask for revealed cards */}
       {isRevealed && (
         <div
-          className={`absolute inset-0 ${bgColorMap[color]} opacity-80 rounded-lg overflow-hidden`}
+          className={`absolute inset-0 ${bgColorMap[color]} overflow-hidden rounded-lg opacity-80`}
         />
       )}
       {/* Special animated assassin reveal */}
@@ -38,13 +38,13 @@ export default function Card({
         <img
           src={assassinGif}
           alt='Assassin'
-          className='flex mx-auto w-auto h-full absolute inset-0 z-10'
+          className='absolute inset-0 z-10 mx-auto flex h-full w-auto'
         />
       )}
       {/* Word overlay */}
       <div className='absolute inset-0 flex items-center justify-center'>
         <span
-          className={`tracking-tight font-bold text-xs md:text-base mt-[30%] z-20 ${
+          className={`z-20 mt-[30%] text-xs font-bold tracking-tight md:text-base ${
             color === 'black' && isRevealed ? 'text-slate-50' : 'text-slate-800'
           }`}
         >
