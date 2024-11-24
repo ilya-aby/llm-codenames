@@ -1,6 +1,6 @@
 import wordlist from './assets/wordlist-eng.txt?raw';
 import { ChatMessage } from './components/Chat';
-import { agents, LLMModel } from './constants/models';
+import { agents, LLMModel } from './utils/models';
 // Core types
 export type TeamColor = 'red' | 'blue';
 export type CardColor = 'red' | 'blue' | 'black' | 'neutral';
@@ -48,6 +48,7 @@ export type GameState = {
   };
   acceptedGuesses?: string[];
   gameWinner?: TeamColor;
+  statusMessage?: string;
 };
 
 // Initialize new game state
@@ -139,12 +140,12 @@ export function updateGameStateFromSpymasterMove(
   };
   newState.chatHistory.push({
     message: move.reasoning + '\n\nClue: ' + move.clue.toUpperCase() + ', ' + move.number,
-    name: currentState.agents[currentState.currentTeam].spymaster.model_name + ` (Spymaster)`,
-    logo: currentState.agents[currentState.currentTeam].spymaster.logo,
+    model: currentState.agents[currentState.currentTeam].spymaster,
     team: currentState.currentTeam,
     cards: currentState.cards,
   });
   newState.currentRole = 'operative';
+  newState.statusMessage = `CLUE: ${move.clue.toUpperCase()}, ${move.number}`;
   return newState;
 }
 
@@ -156,14 +157,15 @@ export function updateGameStateFromOperativeMove(
   const newState = { ...currentState };
   newState.chatHistory.push({
     message: move.reasoning + '\n\nGuesses: ' + move.guesses.join(', '),
-    name: currentState.agents[currentState.currentTeam].operative.model_name + ` (Operative)`,
-    logo: currentState.agents[currentState.currentTeam].operative.logo,
+    model: currentState.agents[currentState.currentTeam].operative,
     team: currentState.currentTeam,
     cards: currentState.cards,
   });
 
   // Reset recently revealed cards
   resetAnimations(newState.cards);
+
+  newState.statusMessage = `GUESSES: ${move.guesses.join(', ')}`;
 
   for (const guess of move.guesses) {
     const card = newState.cards.find((card) => card.word.toUpperCase() === guess.toUpperCase());

@@ -1,54 +1,45 @@
 import { CardType, TeamColor } from '../Game';
+import { colorizeMessage } from '../utils/colors';
+import { LLMModel } from '../utils/models';
 
 export type ChatMessage = {
+  model: LLMModel;
   message: string;
-  name: string;
   team: TeamColor;
-  logo: string;
   cards?: CardType[];
 };
 
-// Helper function to colorize words in the message based on the cards
-const colorizeMessage = (text: string, cards: CardType[]) => {
-  return text.split(/(\s+)/).map((word, i) => {
-    // If it's whitespace or a boundary, return it unchanged
-    if (!word.trim()) return word;
-    const cleanWord = word.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-    const card = cards.find((c) => c.word.toUpperCase() === cleanWord);
-
-    if (!card) return word + ' ';
-
-    const colorClasses = {
-      red: 'text-red-500 bg-orange-200',
-      blue: 'text-blue-600 bg-orange-200',
-      black: 'text-slate-50 bg-slate-800',
-      neutral: 'text-slate-600 bg-orange-200',
-    };
-
-    return (
-      <>
-        <span key={i} className={`${colorClasses[card.color]} rounded px-1 font-semibold`}>
-          {cleanWord}
-        </span>{' '}
-      </>
-    );
-  });
-};
-
-export function Chat({ message, name, team, logo, cards }: ChatMessage) {
+export function Chat({ message, team, model, cards }: ChatMessage) {
   return (
-    <div className='flex gap-3 p-2'>
-      {/* Avatar logo */}
-      <div className='flex-shrink-0'>
-        <img src={logo} alt={name} className={'size-8 rounded-full bg-slate-200 p-1'} />
+    <div className='flex flex-col p-3'>
+      {/* Model chat heading */}
+      <div className='flex flex-row items-center gap-2'>
+        {/* Avatar logo */}
+        <div className='flex-shrink-0'>
+          <img
+            src={model.logo}
+            alt={model.short_name}
+            className={`h-6 w-6 rounded-full border-black p-1 ${
+              team === 'red' ? 'bg-red-50' : 'bg-sky-50'
+            }`}
+          />
+        </div>
+        {/* Model name */}
+        <span
+          className={`text-sm font-semibold ${team === 'blue' ? 'text-sky-500' : 'text-rose-500'}`}
+        >
+          {model.short_name}
+        </span>
       </div>
+
       {/* Chat message */}
       <div className='flex flex-col'>
-        <span className={`text-sm font-bold ${team === 'red' ? 'text-red-500' : 'text-blue-500'}`}>
-          {name}
-        </span>
         {/* Colorize the words in the message based on game cards */}
-        <p className='whitespace-pre-line text-sm italic text-slate-300'>
+        <p
+          className={`mt-2 whitespace-pre-line border-l-4 pl-3 text-sm italic text-slate-300 ${
+            team === 'blue' ? 'border-sky-600/90' : 'border-rose-600/90'
+          }`}
+        >
           {cards ? colorizeMessage(message, cards) : message}
         </p>
       </div>
