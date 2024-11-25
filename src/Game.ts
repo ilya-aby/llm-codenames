@@ -40,6 +40,8 @@ export type GameState = {
   chatHistory: ChatMessage[];
   currentTeam: TeamColor;
   currentRole: Role;
+  previousTeam?: TeamColor;
+  previousRole?: Role;
   remainingRed: number;
   remainingBlue: number;
   currentClue?: {
@@ -146,6 +148,8 @@ export function updateGameStateFromSpymasterMove(
   });
   newState.currentRole = 'operative';
   newState.statusMessage = `CLUE: ${move.clue.toUpperCase()}, ${move.number}`;
+  newState.previousRole = currentState.currentRole;
+  newState.previousTeam = currentState.currentTeam;
   return newState;
 }
 
@@ -178,6 +182,9 @@ export function updateGameStateFromOperativeMove(
 
     card.isRevealed = true;
     card.wasRecentlyRevealed = true;
+
+    newState.previousRole = currentState.currentRole;
+    newState.previousTeam = currentState.currentTeam;
 
     // Assassin card instantly loses the game
     if (card.color === 'black') {

@@ -137,7 +137,7 @@ export default function App() {
       {/* Right panel: Chat history */}
       <div
         ref={chatContainerRef}
-        className='relative h-screen w-full max-w-4xl self-start overflow-y-auto bg-slate-600/50 p-2 backdrop-blur-sm lg:w-1/3 lg:border-l lg:border-slate-500/30'
+        className='relative h-screen w-full max-w-4xl self-start overflow-y-auto bg-slate-800/50 p-2 backdrop-blur-sm lg:w-1/3 lg:border-l lg:border-slate-500/30'
       >
         {gameState.chatHistory.map((message, index) => (
           <Chat key={index} {...message} />
@@ -145,7 +145,7 @@ export default function App() {
         {appState === 'game_over' && (
           <div className='flex w-full justify-center p-2 font-semibold tracking-wide'>
             <div
-              className={`text-${gameState.gameWinner === 'red' ? 'red' : 'blue'}-500 text-base`}
+              className={`text-${gameState.gameWinner === 'red' ? 'rose' : 'sky'}-500 text-base`}
             >
               {gameState.gameWinner === 'red' ? 'Red' : 'Blue'} team wins.
             </div>
