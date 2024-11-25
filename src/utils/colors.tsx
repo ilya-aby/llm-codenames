@@ -32,11 +32,9 @@ export const colorizeMessage = (text: string, cards: CardType[]) => {
     };
 
     return (
-      <>
-        <span key={i} className={`${colorClasses[card.color]} rounded px-1 font-semibold`}>
-          {cleanWord}
-        </span>{' '}
-      </>
+      <span key={i} className={`${colorClasses[card.color]} rounded px-1 font-semibold`}>
+        {cleanWord}
+      </span>
     );
   });
 };

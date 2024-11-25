@@ -15,7 +15,7 @@ export function Scoreboard({ gameState }: { gameState: GameState }) {
         {/* Score */}
         <div className='relative flex items-center justify-center gap-5'>
           <div
-            className={`text-mono font-bold ${
+            className={`text-mono text-lg font-bold ${
               gameState.gameWinner === 'blue' ? 'text-slate-400' : 'text-slate-200'
             }`}
           >
@@ -25,7 +25,7 @@ export function Scoreboard({ gameState }: { gameState: GameState }) {
             <div className='absolute -left-3 text-slate-200'>⏵</div>
           )}
           <div
-            className={`text-mono font-bold ${
+            className={`text-mono text-lg font-bold ${
               gameState.gameWinner === 'red' ? 'text-slate-400' : 'text-slate-200'
             }`}
           >
