@@ -84,7 +84,7 @@ export default function App() {
       {/* Left panel: Scoreboard + Game Board + Game Controls */}
       <div className='flex w-full flex-col items-center gap-y-8 lg:w-2/3'>
         {appState === 'error' && (
-          <div className='fixed left-4 top-4 rounded-md bg-red-500 px-4 py-2 text-white shadow-lg'>
+          <div className='fixed left-4 top-4 z-50 rounded-md bg-red-500 px-4 py-2 text-white shadow-lg'>
             An error occurred. Please reload the game.
           </div>
         )}

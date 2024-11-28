@@ -169,7 +169,7 @@ export function updateGameStateFromOperativeMove(
   // Reset recently revealed cards
   resetAnimations(newState.cards);
 
-  newState.statusMessage = `GUESSES: ${move.guesses.join(', ')}`;
+  newState.statusMessage = `GUESSES for ${currentState.currentClue?.clueText}: ${move.guesses.join(', ')}`;
 
   for (const guess of move.guesses) {
     const card = newState.cards.find((card) => card.word.toUpperCase() === guess.toUpperCase());
