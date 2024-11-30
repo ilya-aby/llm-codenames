@@ -1,8 +1,8 @@
 import { CardType } from './game';
 
 export const bgColorMap = {
-  blue: 'bg-sky-600',
-  red: 'bg-rose-500',
+  blue: 'bg-sky-700',
+  red: 'bg-rose-600',
   black: 'bg-black',
   neutral: 'bg-slate-700',
 };

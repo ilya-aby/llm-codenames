@@ -1,6 +1,6 @@
 import assassinGif from '../assets/assassin-animated.gif';
-import cardFrontImage from '../assets/card-front-edited.png';
-import { bgColorMap, borderColorMap } from '../utils/colors.tsx';
+import cardFrontImage from '../assets/card-front.png';
+import { bgColorMap } from '../utils/colors.tsx';
 import { CardType } from '../utils/game.ts';
 
 type CardProps = CardType & {
@@ -18,25 +18,19 @@ export default function Card({
     <div
       className={`relative transform transition-transform hover:scale-105 ${
         wasRecentlyRevealed ? 'animate-[pulse_1.1s_ease-in-out_infinite]' : ''
-      } rounded-lg ${
-        isSpymasterView && color !== 'neutral' && !isRevealed ?
-          `rounded-lg ring-2 ring-orange-100 ring-offset-0`
-        : ''
-      }`}
+      } overflow-hidden rounded-lg`}
     >
-      <img
-        src={cardFrontImage}
-        alt='Card background'
-        className={`w-full rounded-lg ${
-          isSpymasterView && color !== 'neutral' && !isRevealed ?
-            `border-4 ${borderColorMap[color]}`
-          : ''
-        }`}
-      />
+      <img src={cardFrontImage} alt='Card background' className='w-full' />
+      {/* Color overlay hint to reveal card color */}
+      {isSpymasterView && color !== 'neutral' && !isRevealed && (
+        <div
+          className={`absolute right-[12%] top-[18%] h-[33%] w-[16%] ${bgColorMap[color]} bg-gradient-to-b from-white/10 to-transparent opacity-50 backdrop-blur-sm`}
+        />
+      )}
       {/* Full-color mask for revealed cards */}
       {isRevealed && (
         <div
-          className={`absolute inset-0 ${bgColorMap[color]} overflow-hidden rounded-lg opacity-80`}
+          className={`absolute inset-0 ${bgColorMap[color]} overflow-hidden rounded-lg bg-gradient-to-b from-white/20 to-transparent opacity-75 backdrop-blur-[2px]`}
         />
       )}
       {/* Special animated assassin reveal */}
