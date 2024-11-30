@@ -8,8 +8,8 @@ export const bgColorMap = {
 };
 
 export const borderColorMap = {
-  blue: 'border-blue-500',
-  red: 'border-red-500',
+  blue: 'border-sky-600',
+  red: 'border-rose-500',
   black: 'border-black',
   neutral: 'border-slate-700',
 };

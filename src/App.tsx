@@ -23,19 +23,25 @@ export default function App() {
 
   useEffect(() => {
     const fetchResponse = async () => {
-      const data = await fetchLLMResponse({
-        messages: createMessagesFromGameState(gameState),
-        modelName:
-          gameState.agents[gameState.currentTeam][gameState.currentRole].openrouter_model_id,
-        referer: 'https://llmcodenames.com',
-        title: 'LLM Codenames',
-      });
-      if (gameState.currentRole === 'spymaster') {
-        setGameState(updateGameStateFromSpymasterMove(gameState, data as SpymasterMove));
-      } else {
-        setGameState(updateGameStateFromOperativeMove(gameState, data as OperativeMove));
+      try {
+        const data = await fetchLLMResponse({
+          messages: createMessagesFromGameState(gameState),
+          modelName:
+            gameState.agents[gameState.currentTeam][gameState.currentRole].openrouter_model_id,
+          referer: 'https://llmcodenames.com',
+          title: 'LLM Codenames',
+        });
+        if (gameState.currentRole === 'spymaster') {
+          setGameState(updateGameStateFromSpymasterMove(gameState, data as SpymasterMove));
+        } else {
+          setGameState(updateGameStateFromOperativeMove(gameState, data as OperativeMove));
+        }
+        setAppState('ready_for_turn');
+      } catch (error) {
+        console.error('Error in fetchResponse:', error);
+        setAppState('error');
+        setIsGamePaused(true);
       }
-      setAppState('ready_for_turn');
     };
     if (isGamePaused) {
       return;

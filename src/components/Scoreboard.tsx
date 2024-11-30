@@ -72,7 +72,7 @@ export function Scoreboard({ gameState }: { gameState: GameState }) {
           </span>
           {gameState.currentGuesses && (
             <span className='ml-1.5'>
-              {colorizeMessage(gameState.currentGuesses.join(', '), gameState.cards)}
+              {colorizeMessage(gameState.currentGuesses.join(' '), gameState.cards)}
             </span>
           )}
         </div>
