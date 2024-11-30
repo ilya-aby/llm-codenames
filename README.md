@@ -4,7 +4,7 @@ An implementation of the board game [Codenames](<https://en.wikipedia.org/wiki/C
 
 ## Features
 
-- Uses Netlify Functions as a proxy to make LLM calls
+- Uses Cloudflare Workers as a proxy to make LLM calls. Proxy we're using is defined [here](https://github.com/ilya-aby/llm-proxy) with instructions on how to deploy it to Cloudflare
 - Uses OpenRouter to enable hot-swapping of LLM models from different providers
 
 ## Technologies Used
@@ -14,14 +14,14 @@ An implementation of the board game [Codenames](<https://en.wikipedia.org/wiki/C
 - TS
 - React
 - Vite
-- Netlify Functions
-- OpenRouter & OpenAI JS client
+- Cloudflare Workers
+- OpenRouter
 - Tailwind
 
 ## Installation
 
-- `npm install`
-- dev server: `npx netlify dev` to run Netlify dev server along with llm proxy or `npm run dev` without the proxy
-- for dev, add `OPENROUTER_API_KEY=` to `.env`
-- prod: `npm run build`
-- for prod, provide an `OPENROUTER_API_KEY` as a build variable
+- `bun install`
+- dev server: `bun run dev`
+- for dev, add `VITE_CLOUDFLARE_WORKER_URL=` to `.env` and set it to the URL of the proxy worker that will relay the LLM API calls
+- prod: `bun run build`
+- for prod, provide an `VITE_CLOUDFLARE_WORKER_URL` as a build variable

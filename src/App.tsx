@@ -7,9 +7,12 @@ import { createRolePrompt } from './prompts/rolePrompt';
 import {
   GameState,
   initializeGameState,
+  OperativeMove,
+  SpymasterMove,
   updateGameStateFromOperativeMove,
   updateGameStateFromSpymasterMove,
 } from './utils/game';
+import { fetchLLMResponse } from './utils/llm';
 
 type AppState = 'game_start' | 'ready_for_turn' | 'waiting_for_response' | 'error' | 'game_over';
 
@@ -21,42 +24,19 @@ export default function App() {
 
   useEffect(() => {
     const fetchResponse = async () => {
-      const prompt = createRolePrompt(gameState);
-      try {
-        // Add brief delay before making the request
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        const response = await fetch('/.netlify/functions/llm-proxy', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            prompt: prompt,
-            model_name:
-              gameState.agents[gameState.currentTeam][gameState.currentRole].openrouter_model_id,
-          }),
-        });
-        if (!response.ok) {
-          throw new Error(`API returned ${response.status}: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        console.log('Response:', data);
-
-        if (data.error) {
-          throw new Error(data.error);
-        }
-
-        if (gameState.currentRole === 'spymaster') {
-          setGameState(updateGameStateFromSpymasterMove(gameState, data));
-        } else {
-          setGameState(updateGameStateFromOperativeMove(gameState, data));
-        }
-        setAppState('ready_for_turn');
-      } catch (error) {
-        console.error('Error fetching response:', error);
-        setAppState('error');
+      const data = await fetchLLMResponse({
+        prompt: createRolePrompt(gameState),
+        modelName:
+          gameState.agents[gameState.currentTeam][gameState.currentRole].openrouter_model_id,
+        referer: 'https://llmcodenames.com',
+        title: 'LLM Codenames',
+      });
+      if (gameState.currentRole === 'spymaster') {
+        setGameState(updateGameStateFromSpymasterMove(gameState, data as SpymasterMove));
+      } else {
+        setGameState(updateGameStateFromOperativeMove(gameState, data as OperativeMove));
       }
+      setAppState('ready_for_turn');
     };
     if (isGamePaused) {
       return;
