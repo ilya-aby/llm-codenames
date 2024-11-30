@@ -1,5 +1,5 @@
-import { GameState } from '../Game';
 import { colorizeMessage } from '../utils/colors';
+import { GameState } from '../utils/game';
 import { ModelPill } from './ModelPill';
 
 export function Scoreboard({ gameState }: { gameState: GameState }) {
