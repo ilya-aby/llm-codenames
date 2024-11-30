@@ -65,9 +65,16 @@ export function Scoreboard({ gameState }: { gameState: GameState }) {
         </div>
       </div>
       {/* Status Message */}
-      {gameState.statusMessage && (
+      {gameState.currentClue && (
         <div className='rounded-b-lg bg-neutral-300/90 px-5 py-2 text-center text-sm font-bold text-slate-900'>
-          {colorizeMessage(gameState.statusMessage, gameState.cards)}
+          <span>
+            {gameState.currentClue.clueText}, {gameState.currentClue.number}
+          </span>
+          {gameState.currentGuesses && (
+            <span className='ml-1.5'>
+              {colorizeMessage(gameState.currentGuesses.join(', '), gameState.cards)}
+            </span>
+          )}
         </div>
       )}
     </div>

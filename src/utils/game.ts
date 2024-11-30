@@ -48,9 +48,8 @@ export type GameState = {
     clueText: string;
     number: number;
   };
-  acceptedGuesses?: string[];
+  currentGuesses?: string[];
   gameWinner?: TeamColor;
-  statusMessage?: string;
 };
 
 // Initialize new game state
@@ -147,7 +146,7 @@ export function updateGameStateFromSpymasterMove(
     cards: currentState.cards,
   });
   newState.currentRole = 'operative';
-  newState.statusMessage = `CLUE: ${move.clue.toUpperCase()}, ${move.number}`;
+  newState.currentGuesses = undefined;
   newState.previousRole = currentState.currentRole;
   newState.previousTeam = currentState.currentTeam;
   return newState;
@@ -169,7 +168,7 @@ export function updateGameStateFromOperativeMove(
   // Reset recently revealed cards
   resetAnimations(newState.cards);
 
-  newState.statusMessage = `GUESSES for ${currentState.currentClue?.clueText}: ${move.guesses.join(', ')}`;
+  newState.currentGuesses = move.guesses;
 
   for (const guess of move.guesses) {
     const card = newState.cards.find((card) => card.word.toUpperCase() === guess.toUpperCase());
@@ -219,7 +218,7 @@ export function updateGameStateFromOperativeMove(
   // Switch to the other team's spymaster once we're done guessing
   newState.currentRole = 'spymaster';
   newState.currentTeam = currentState.currentTeam === 'red' ? 'blue' : 'red';
-  newState.currentClue = undefined;
+  // newState.currentClue = undefined;
 
   return newState;
 }
