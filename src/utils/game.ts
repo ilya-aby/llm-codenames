@@ -1,6 +1,6 @@
+import { ChatMessage } from '../components/Chat';
 import wordlist from './assets/wordlist-eng.txt?raw';
-import { ChatMessage } from './components/Chat';
-import { agents, LLMModel } from './utils/models';
+import { agents, LLMModel } from './models';
 // Core types
 export type TeamColor = 'red' | 'blue';
 export type CardColor = 'red' | 'blue' | 'black' | 'neutral';

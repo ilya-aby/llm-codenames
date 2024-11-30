@@ -1,4 +1,4 @@
-import { TeamColor } from '../Game';
+import { TeamColor } from '../utils/game';
 import { LLMModel } from '../utils/models';
 
 export function ModelPill({

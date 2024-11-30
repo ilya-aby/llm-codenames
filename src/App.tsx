@@ -3,13 +3,13 @@ import { useEffect, useRef, useState } from 'react';
 import Card from './components/Card';
 import { Chat } from './components/Chat';
 import { Scoreboard } from './components/Scoreboard';
+import { createRolePrompt } from './prompts/rolePrompt';
 import {
   GameState,
   initializeGameState,
   updateGameStateFromOperativeMove,
   updateGameStateFromSpymasterMove,
-} from './Game';
-import { createRolePrompt } from './prompts/rolePrompt';
+} from './utils/game';
 
 type AppState = 'game_start' | 'ready_for_turn' | 'waiting_for_response' | 'error' | 'game_over';
 

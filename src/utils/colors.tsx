@@ -1,4 +1,4 @@
-import { CardType } from '../Game';
+import { CardType } from './game';
 
 export const bgColorMap = {
   blue: 'bg-sky-600',

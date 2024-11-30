@@ -1,5 +1,5 @@
-import { CardType, TeamColor } from '../Game';
 import { colorizeMessage } from '../utils/colors';
+import { CardType, TeamColor } from '../utils/game';
 import { LLMModel } from '../utils/models';
 
 export type ChatMessage = {

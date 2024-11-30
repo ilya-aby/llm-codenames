@@ -1,4 +1,4 @@
-import { GameState } from '../Game';
+import { GameState } from '../utils/game';
 import { basePrompt } from './basePrompt';
 
 export const createRolePrompt = (gameState: GameState): string => `

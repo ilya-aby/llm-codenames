@@ -1,7 +1,7 @@
-import { CardType } from '../Game';
 import assassinGif from '../assets/assassin-animated.gif';
 import cardFrontImage from '../assets/card-front.png';
 import { bgColorMap } from '../utils/colors.tsx';
+import { CardType } from '../utils/game.ts';
 
 type CardProps = CardType & {
   isSpymasterView: boolean;
