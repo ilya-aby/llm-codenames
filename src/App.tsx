@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react';
 import Card from './components/Card';
 import { Chat } from './components/Chat';
 import { Scoreboard } from './components/Scoreboard';
-import { createRolePrompt } from './prompts/rolePrompt';
 import {
   GameState,
   initializeGameState,
@@ -12,7 +11,7 @@ import {
   updateGameStateFromOperativeMove,
   updateGameStateFromSpymasterMove,
 } from './utils/game';
-import { fetchLLMResponse } from './utils/llm';
+import { createMessagesFromGameState, fetchLLMResponse } from './utils/llm';
 
 type AppState = 'game_start' | 'ready_for_turn' | 'waiting_for_response' | 'error' | 'game_over';
 
@@ -25,7 +24,7 @@ export default function App() {
   useEffect(() => {
     const fetchResponse = async () => {
       const data = await fetchLLMResponse({
-        prompt: createRolePrompt(gameState),
+        messages: createMessagesFromGameState(gameState),
         modelName:
           gameState.agents[gameState.currentTeam][gameState.currentRole].openrouter_model_id,
         referer: 'https://llmcodenames.com',

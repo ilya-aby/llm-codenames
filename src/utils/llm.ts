@@ -1,16 +1,39 @@
 import { jsonrepair } from 'jsonrepair';
-import { OperativeMove, SpymasterMove } from './game';
+import { opSysPrompt } from '../prompts/opSysPrompt';
+import { spySysPrompt } from '../prompts/spySysPrompt';
+import { createUserPrompt } from '../prompts/userPrompt';
+import { GameState, OperativeMove, SpymasterMove } from './game';
+
+type Message = {
+  role: 'system' | 'user' | 'assistant';
+  content: string;
+};
 
 type LLMRequest = {
-  prompt: string; // The user prompt for the model
-  modelName: string; // The OpenRouter model string (e.g. "openai/gpt4o")
+  messages: Message[]; // Array of messages in the conversation
+  modelName: string; // OpenRouter model string (e.g. "openai/gpt-4o")
   stream?: boolean; // Whether to stream the response
   referer?: string; // Optional referer URL for OpenRouter identification (e.g. "https://mysite.com")
-  title?: string; // Optional title header for OpenRouter identification (e.g. "Codenames AI")
+  title?: string; // Optional title header for OpenRouter identification (e.g. "My AI App")
 };
 
 const REFERRER = 'https://llmcodenames.com';
 const TITLE = 'LLM Codenames';
+
+export function createMessagesFromGameState(gameState: GameState): Message[] {
+  const messages: Message[] = [];
+  messages.push({
+    role: 'system',
+    content: gameState.currentRole === 'spymaster' ? spySysPrompt : opSysPrompt,
+  });
+
+  messages.push({
+    role: 'user',
+    content: createUserPrompt(gameState),
+  });
+
+  return messages;
+}
 
 export async function fetchLLMResponse(
   request: LLMRequest,
@@ -22,13 +45,18 @@ export async function fetchLLMResponse(
     );
   }
   try {
+    console.log('Messages:', request.messages);
+
+    // 1 second delay to make the game less hectic
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     const response = await fetch(CLOUDFLARE_WORKER_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        prompt: request.prompt,
+        messages: request.messages,
         modelName: request.modelName,
         stream: false,
         referer: request.referer || REFERRER,
