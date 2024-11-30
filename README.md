@@ -1,5 +1,7 @@
 # Codenames AI
 
+![Codenames AI Screenshot](/public/codenames-screenshot.png)
+
 An implementation of the board game [Codenames](<https://en.wikipedia.org/wiki/Codenames_(board_game)>), with all four players replaced with LLM agents.
 
 ## Features
