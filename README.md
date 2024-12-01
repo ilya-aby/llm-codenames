@@ -1,12 +1,12 @@
-# Codenames AI
+# LLM Codenames
 
-![Codenames AI Screenshot](/public/codenames-screenshot.png)
+![LLM Codenames Screenshot](/public/codenames-screenshot.png)
 
 An implementation of the board game [Codenames](<https://en.wikipedia.org/wiki/Codenames_(board_game)>), with all four players replaced with LLM agents.
 
 ## Features
 
-- Uses Cloudflare Workers as a proxy to make LLM calls. Proxy we're using is defined [here](https://github.com/ilya-aby/llm-proxy) with instructions on how to deploy it to Cloudflare
+- Uses Cloudflare Workers as a proxy to make LLM calls. Proxy is defined [here](https://github.com/ilya-aby/llm-proxy) with instructions on how to deploy it to Cloudflare
 - Uses OpenRouter to enable hot-swapping of LLM models from different providers
 
 ## Technologies Used

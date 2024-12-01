@@ -25,10 +25,10 @@ export const colorizeMessage = (text: string, cards: CardType[]) => {
     if (!card) return word + ' ';
 
     const colorClasses = {
-      red: 'text-rose-50 bg-rose-600',
-      blue: 'text-sky-50 bg-sky-600',
-      black: 'text-slate-50 bg-slate-800',
-      neutral: 'text-slate-600 bg-orange-200',
+      red: 'text-rose-50 bg-rose-600/70',
+      blue: 'text-sky-50 bg-sky-700/70',
+      black: 'text-slate-50 bg-slate-800/90',
+      neutral: 'text-slate-600 bg-orange-200/70',
     };
 
     return (

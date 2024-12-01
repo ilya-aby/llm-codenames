@@ -4,10 +4,10 @@ import { ModelPill } from './ModelPill';
 
 export function Scoreboard({ gameState }: { gameState: GameState }) {
   return (
-    <div className='flex flex-col rounded-lg border border-slate-500/30 bg-slate-600/50 shadow-2xl backdrop-blur-md'>
+    <div className='mt-4 flex flex-col rounded-lg border border-slate-500/30 bg-slate-600/50 shadow-2xl backdrop-blur-md sm:mt-0'>
       <div className='flex items-center gap-5 px-5 py-4'>
         {/* Red Team */}
-        <div className='flex gap-2'>
+        <div className='flex flex-col items-end gap-2 sm:flex-row sm:items-center'>
           <ModelPill
             model={gameState.agents.red.spymaster}
             teamColor='red'
@@ -51,7 +51,7 @@ export function Scoreboard({ gameState }: { gameState: GameState }) {
         </div>
 
         {/* Blue Team */}
-        <div className='flex gap-2'>
+        <div className='flex flex-col gap-2 sm:flex-row'>
           <ModelPill
             model={gameState.agents.blue.spymaster}
             teamColor='blue'
