@@ -12,8 +12,8 @@ export function ModelPill({
 }) {
   return (
     <span
-      className={`inline-flex w-fit items-center gap-2 rounded-xl px-2 py-1 ${
-        teamColor === 'red' ? 'bg-rose-600 text-red-50' : 'bg-sky-700 text-sky-50'
+      className={`inline-flex w-full items-center gap-2 rounded-xl px-2 py-1 sm:w-fit ${
+        teamColor === 'red' ? 'bg-rose-600/70 text-red-50' : 'bg-sky-700/70 text-sky-50'
       } ${isActive ? 'border-2 border-white' : ''}`}
     >
       {/* Avatar logo */}

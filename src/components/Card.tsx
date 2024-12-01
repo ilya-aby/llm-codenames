@@ -24,7 +24,7 @@ export default function Card({
       {/* Color overlay hint to reveal card color */}
       {isSpymasterView && color !== 'neutral' && !isRevealed && (
         <div
-          className={`absolute right-[12%] top-[18%] h-[33%] w-[16%] ${bgColorMap[color]} bg-gradient-to-b from-white/10 to-transparent opacity-50 backdrop-blur-sm`}
+          className={`absolute right-[12%] top-[18%] h-[33%] w-[16%] ${bgColorMap[color]} bg-gradient-to-b from-white/10 to-transparent opacity-70 backdrop-blur-sm`}
         />
       )}
       {/* Full-color mask for revealed cards */}
@@ -44,9 +44,9 @@ export default function Card({
       {/* Word overlay */}
       <div className='absolute inset-0 flex items-center justify-center'>
         <span
-          className={`z-20 mt-[30%] text-xs font-bold tracking-tighter md:text-base ${
+          className={`z-20 mt-[30%] font-bold tracking-tighter ${
             color === 'black' && isRevealed ? 'text-slate-50' : 'text-slate-800'
-          }`}
+          } ${word.length >= 9 ? 'text-[0.6rem] sm:text-base' : 'text-[0.7rem] sm:text-base'}`}
         >
           {word}
         </span>
