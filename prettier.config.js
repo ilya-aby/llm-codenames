@@ -4,4 +4,4 @@ export default {
   jsxSingleQuote: true,
   printWidth: 100,
   experimentalTernaries: true,
-}
+};

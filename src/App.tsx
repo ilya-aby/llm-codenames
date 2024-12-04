@@ -127,7 +127,7 @@ export default function App() {
         {gameState.chatHistory.map((message, index) => (
           <Chat key={index} {...message} />
         ))}
-        {/* {appState === 'game_over' && (
+        {appState === 'game_over' && (
           <div className='flex w-full justify-center p-2 font-semibold tracking-wide'>
             <div
               className={`text-${gameState.gameWinner === 'red' ? 'rose' : 'sky'}-500 text-base`}
@@ -135,7 +135,7 @@ export default function App() {
               {gameState.gameWinner === 'red' ? 'Red' : 'Blue'} team wins.
             </div>
           </div>
-        )} */}
+        )}
         {/* Spinner & Pause indicator */}
         {appState === 'waiting_for_response' && (
           <div className='sticky flex w-full justify-end p-2'>
