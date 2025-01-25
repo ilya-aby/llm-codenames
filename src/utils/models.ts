@@ -1,5 +1,6 @@
 // Import logos
 import anthropicLogo from '../assets/logos/anthropic.svg';
+import deepseekLogo from '../assets/logos/deepseek.svg';
 import geminiLogo from '../assets/logos/gemini.svg';
 import openaiLogo from '../assets/logos/openai.svg';
 import xaiLogo from '../assets/logos/xai.svg';
@@ -62,9 +63,15 @@ export const agents: LLMModel[] = [
   //   logo: metaLogo,
   // },
   {
-    openrouter_model_id: 'x-ai/grok-beta',
-    model_name: 'Grok Beta',
-    short_name: 'Grok',
+    openrouter_model_id: 'x-ai/grok-2-1212',
+    model_name: 'Grok 2 1212',
+    short_name: 'Grok 2',
     logo: xaiLogo,
+  },
+  {
+    openrouter_model_id: 'deepseek/deepseek-r1',
+    model_name: 'DeepSeek R1',
+    short_name: 'DeepSeek R1',
+    logo: deepseekLogo,
   },
 ];
