@@ -26,9 +26,9 @@ export const agents: LLMModel[] = [
     logo: openaiLogo,
   },
   {
-    openrouter_model_id: 'openai/o1-mini',
-    model_name: 'OpenAI o1-mini',
-    short_name: 'o1 mini',
+    openrouter_model_id: 'openai/o3-mini',
+    model_name: 'OpenAI o3-mini',
+    short_name: 'o3 mini',
     logo: openaiLogo,
   },
   {
