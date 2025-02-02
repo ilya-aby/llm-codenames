@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { colorizeMessage } from '../utils/colors';
 import { CardType, TeamColor } from '../utils/game';
 import { LLMModel } from '../utils/models';
@@ -8,14 +9,37 @@ export type ChatMessage = {
   model: LLMModel | null;  // null for human players
   team: TeamColor;
   cards: CardType[];
+  hideReasoning?: boolean; // Add this to indicate if reasoning should be hidden
 };
 
-export function Chat({ message, team, model, cards }: ChatMessage) {
+export function Chat({ message, team, model, cards, hideReasoning }: ChatMessage) {
+  const [isReasoningRevealed, setIsReasoningRevealed] = useState(false);
+
   const getLogo = (model: LLMModel | null) => {
     if (!model) {
       return userLogo;  // Use user logo for human players
     }
     return model.logo;
+  };
+
+  // Split message into reasoning and clue/guess parts
+  const formatMessage = (message: string) => {
+    const parts = message.split('\n\n');
+    if (parts.length < 2) return { reasoning: '', action: message };
+    return {
+      reasoning: parts[0],
+      action: parts.slice(1).join('\n\n')
+    };
+  };
+
+  const { reasoning, action } = formatMessage(message);
+
+  // Only colorize text when it's revealed
+  const processReasoning = (reasoning: string) => {
+    if (!hideReasoning || isReasoningRevealed) {
+      return colorizeMessage(reasoning, cards);
+    }
+    return reasoning;
   };
 
   return (
@@ -48,7 +72,36 @@ export function Chat({ message, team, model, cards }: ChatMessage) {
             team === 'blue' ? 'border-sky-600/90' : 'border-rose-600/90'
           }`}
         >
-          {cards ? colorizeMessage(message, cards) : message}
+          {/* Reasoning section */}
+          {reasoning && hideReasoning && (
+            <span 
+              onClick={() => setIsReasoningRevealed(!isReasoningRevealed)}
+              className={`cursor-pointer rounded px-1 transition-all duration-200 ${
+                isReasoningRevealed 
+                  ? 'bg-transparent' 
+                  : 'bg-slate-700 hover:bg-slate-600'
+              }`}
+            >
+              <span className={isReasoningRevealed ? '' : 'invisible'}>
+                {processReasoning(reasoning)}
+              </span>
+              {!isReasoningRevealed && (
+                <span className="visible">
+                  (Click to reveal spymaster reasoning)
+                </span>
+              )}
+            </span>
+          )}
+          
+          {reasoning && !hideReasoning && colorizeMessage(reasoning, cards)}
+          
+          {/* Action section (clue/guess) */}
+          {action && (
+            <>
+              {reasoning && <br />}<br />
+              {colorizeMessage(action, cards)}
+            </>
+          )}
         </p>
       </div>
     </div>

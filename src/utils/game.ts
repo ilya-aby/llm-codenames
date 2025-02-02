@@ -202,6 +202,7 @@ export function updateGameStateFromSpymasterMove(
     model: currentState.agents[currentState.currentTeam].spymaster.model,
     team: currentState.currentTeam,
     cards: currentState.cards,
+    hideReasoning: currentState.agents[currentState.currentTeam].operative.type === 'human'
   });
   newState.currentRole = 'operative';
   newState.currentGuesses = undefined;
@@ -221,6 +222,7 @@ export function updateGameStateFromOperativeMove(
     model: currentState.agents[currentState.currentTeam].operative.model,
     team: currentState.currentTeam,
     cards: currentState.cards,
+    hideReasoning: false
   });
 
   // Reset recently revealed cards

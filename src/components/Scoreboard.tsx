@@ -9,12 +9,12 @@ export function Scoreboard({ gameState }: { gameState: GameState }) {
         {/* Red Team */}
         <div className='flex flex-col items-end gap-2 sm:flex-row sm:items-center'>
           <ModelPill
-            model={gameState.agents.red.spymaster}
+            agent={gameState.agents.red.spymaster}
             teamColor='red'
             isActive={gameState.previousTeam === 'red' && gameState.previousRole === 'spymaster'}
           />
           <ModelPill
-            model={gameState.agents.red.operative}
+            agent={gameState.agents.red.operative}
             teamColor='red'
             isActive={gameState.previousTeam === 'red' && gameState.previousRole === 'operative'}
           />
@@ -53,12 +53,12 @@ export function Scoreboard({ gameState }: { gameState: GameState }) {
         {/* Blue Team */}
         <div className='flex flex-col gap-2 sm:flex-row'>
           <ModelPill
-            model={gameState.agents.blue.spymaster}
+            agent={gameState.agents.blue.spymaster}
             teamColor='blue'
             isActive={gameState.previousTeam === 'blue' && gameState.previousRole === 'spymaster'}
           />
           <ModelPill
-            model={gameState.agents.blue.operative}
+            agent={gameState.agents.blue.operative}
             teamColor='blue'
             isActive={gameState.previousTeam === 'blue' && gameState.previousRole === 'operative'}
           />
