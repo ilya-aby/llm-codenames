@@ -141,7 +141,10 @@ export default function App() {
                   <Card
                     key={index}
                     {...card}
-                    isSpymasterView={gameState.currentRole === 'spymaster'}
+                    isSpymasterView={
+                      gameState.agents.red.spymaster.type === 'human' && 
+                      gameState.agents.red.spymaster.type === gameState.agents[gameState.currentTeam][gameState.currentRole].type
+                    }
                     isSelectable={
                       gameState.agents[gameState.currentTeam][gameState.currentRole].type === 'human' &&
                       gameState.currentRole === 'operative' &&
