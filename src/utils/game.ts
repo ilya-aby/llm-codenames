@@ -73,30 +73,30 @@ export const initializeGameState = (): GameState => {
 export const initializeGameStateWithPlayers = (
   redSpymaster: 'human' | 'ai',
   redOperative: 'human' | 'ai',
-  blueSpymaster: 'ai',
-  blueOperative: 'ai'
+  _blueSpymaster: 'ai',
+  _blueOperative: 'ai'
 ): GameState => {
   const availableAgents = [...agents];
   
   const pickAgent = (type: PlayerType, isOperative: boolean): TeamAgents[Role] => {
     if (type === 'human') {
       return {
-        model: null!, // No model needed for human players
-        type: 'human'
+        model: null!,
+        type: 'human' as const
       };
     }
     // For AI players
     if (isOperative) {
       return {
-        model: agents[0], // Use first agent for operative
-        type: 'ai'
+        model: agents[0],
+        type: 'ai' as const
       };
     }
     // For AI spymasters, pick randomly from remaining agents
     const randomIndex = Math.floor(Math.random() * availableAgents.length);
     return {
       model: availableAgents.splice(randomIndex, 1)[0],
-      type: 'ai'
+      type: 'ai' as const
     };
   };
 
@@ -159,26 +159,28 @@ const drawNewCards = (): CardType[] => {
 // Select four random agents to form the two teams
 // More agents can be added by editing the `agents` array in `constants/models.ts`
 const selectRandomAgents = (): GameAgents => {
-  const availableAgents = [...agents];
-
-  const pickRandomAgent = () => {
-    const randomIndex = Math.floor(Math.random() * availableAgents.length);
-    return {
-      model: availableAgents.splice(randomIndex, 1)[0],
-      type: 'ai'
-    };
-  };
-
   return {
     red: {
-      spymaster: pickRandomAgent(),
-      operative: pickRandomAgent(),
+      spymaster: {
+        model: agents[0],
+        type: 'ai' as const
+      },
+      operative: {
+        model: agents[1],
+        type: 'ai' as const
+      },
     },
     blue: {
-      spymaster: pickRandomAgent(),
-      operative: pickRandomAgent(),
+      spymaster: {
+        model: agents[2],
+        type: 'ai' as const
+      },
+      operative: {
+        model: agents[3],
+        type: 'ai' as const
+      },
     },
-  } satisfies GameAgents;
+  };
 };
 
 const resetAnimations = (cards: CardType[]) => {

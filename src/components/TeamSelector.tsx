@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Role, TeamColor } from '../utils/game';
+import { Role } from '../utils/game';
 
 interface TeamSelectorProps {
   onStart: (players: {
