@@ -7,6 +7,7 @@ type CardProps = CardType & {
   isSpymasterView: boolean;
   isSelectable?: boolean;
   isSelected?: boolean;
+  selectedTimestamp?: number;
   onToggleSelect?: (word: string) => void;
 };
 
@@ -18,6 +19,7 @@ export default function Card({
   wasRecentlyRevealed,
   isSelectable = false,
   isSelected = false,
+  selectedTimestamp,
   onToggleSelect,
 }: CardProps) {
   // Only show colors if card is revealed or user is spymaster
@@ -31,8 +33,12 @@ export default function Card({
       } ${
         wasRecentlyRevealed ? 'animate-[pulse_1.1s_ease-in-out_infinite]' : ''
       } overflow-hidden rounded-lg ${
-        isSelected ? 'ring-4 ring-yellow-400 scale-110 shadow-xl shadow-yellow-400/50 animate-[pulse_2s_ease-in-out_infinite]' : ''
+        isSelected ? 'ring-4 ring-yellow-400 scale-110 shadow-xl shadow-yellow-400/50 selected-card' : ''
       }`}
+      style={selectedTimestamp ? {
+        animationDelay: '0ms',  // Ensure all cards start animation at same time
+        animationPlayState: 'running'
+      } : undefined}
     >
       <img src={cardFrontImage} alt='Card background' className='w-full' />
       {/* Selection overlay */}

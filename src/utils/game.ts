@@ -12,6 +12,7 @@ export type CardType = {
   color: CardColor;
   isRevealed: boolean;
   wasRecentlyRevealed: boolean;
+  selectedTimestamp?: number;
 };
 
 export type SpymasterMove = {
@@ -149,6 +150,7 @@ const drawNewCards = (): CardType[] => {
       color: teams[randomIndex],
       isRevealed: false,
       wasRecentlyRevealed: false,
+      selectedTimestamp: undefined,
     });
     teams.splice(randomIndex, 1);
   });
@@ -218,7 +220,13 @@ export function updateGameStateFromOperativeMove(
   currentState: GameState,
   move: OperativeMove,
 ): GameState {
-  const newState = { ...currentState };
+  const newState = structuredClone(currentState);
+  
+  // Reset all selection timestamps when submitting
+  newState.cards.forEach(card => {
+    card.selectedTimestamp = undefined;
+  });
+  
   newState.chatHistory.push({
     message: move.reasoning + '\n\nGuesses: ' + move.guesses.join(', '),
     model: currentState.agents[currentState.currentTeam].operative.model,
@@ -232,15 +240,19 @@ export function updateGameStateFromOperativeMove(
 
   newState.currentGuesses = move.guesses;
 
-  for (const guess of move.guesses) {
+  // Validate all guesses first
+  const guessedCards = move.guesses.map(guess => {
     const card = newState.cards.find((card) => card.word.toUpperCase() === guess.toUpperCase());
-
-    // If card not found or already revealed, it's an invalid guess
     if (!card || card.isRevealed) {
       console.error(`INVALID GUESS: ${guess}`);
-      continue;
+      return null;
     }
+    return card;
+  }).filter((card): card is CardType => card !== null);
 
+  // Process all valid guesses
+  let shouldEndTurn = false;
+  for (const card of guessedCards) {
     card.isRevealed = true;
     card.wasRecentlyRevealed = true;
 
@@ -257,30 +269,31 @@ export function updateGameStateFromOperativeMove(
     // Decrement the count of remaining cards for the team
     if (card.color === 'red') {
       newState.remainingRed--;
+      if (newState.remainingRed === 0) {
+        newState.gameWinner = 'red';
+        return newState;
+      }
     } else if (card.color === 'blue') {
       newState.remainingBlue--;
+      if (newState.remainingBlue === 0) {
+        newState.gameWinner = 'blue';
+        resetAnimations(newState.cards);
+        return newState;
+      }
     }
 
-    // If no more cards remain for the team, they win
-    if (newState.remainingRed === 0) {
-      newState.gameWinner = 'red';
-      return newState;
-    } else if (newState.remainingBlue === 0) {
-      newState.gameWinner = 'blue';
-      resetAnimations(newState.cards);
-      return newState;
-    }
-
-    // If we guessed a card that isn't our team's color, we're done
+    // If we guessed a card that isn't our team's color, mark to end turn
     if (card.color !== currentState.currentTeam) {
-      break;
+      shouldEndTurn = true;
     }
   }
 
-  // Switch to the other team's spymaster once we're done guessing
-  newState.currentRole = 'spymaster';
-  newState.currentTeam = currentState.currentTeam === 'red' ? 'blue' : 'red';
-  // newState.currentClue = undefined;
+  // End turn if we guessed wrong or if we're done guessing
+  if (shouldEndTurn || guessedCards.length >= ((currentState.currentClue?.number || 0) + 1)) {
+    newState.currentRole = 'spymaster';
+    newState.currentTeam = currentState.currentTeam === 'red' ? 'blue' : 'red';
+    newState.currentClue = undefined;
+  }
 
   return newState;
 }

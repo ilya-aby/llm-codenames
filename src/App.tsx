@@ -101,11 +101,27 @@ export default function App() {
   };
 
   const handleWordSelect = (word: string) => {
-    setSelectedWords(prev => 
-      prev.includes(word) 
+    setSelectedWords(prev => {
+      const newSelection = prev.includes(word) 
         ? prev.filter(w => w !== word)
-        : [...prev, word]
-    );
+        : [...prev, word];
+      
+      // Update timestamps in game state
+      setGameState(prevState => {
+        const newState = structuredClone(prevState);
+        const now = Date.now();
+        newState.cards.forEach(card => {
+          if (newSelection.includes(card.word)) {
+            card.selectedTimestamp = now;  // Same timestamp for all selected cards
+          } else {
+            card.selectedTimestamp = undefined;
+          }
+        });
+        return newState;
+      });
+      
+      return newSelection;
+    });
   };
 
   const handleMove = (move: SpymasterMove | OperativeMove) => {
