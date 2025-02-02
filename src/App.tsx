@@ -78,13 +78,13 @@ export default function App() {
 
   const handleTeamSelection = (players: {
     red: { spymaster: 'human' | 'ai'; operative: 'human' | 'ai' };
-    blue: { spymaster: 'human' | 'ai'; operative: 'human' | 'ai' };
+    blue: { spymaster: 'ai'; operative: 'ai' };
   }) => {
     setGameState(initializeGameStateWithPlayers(
       players.red.spymaster,
       players.red.operative,
-      players.blue.spymaster,
-      players.blue.operative
+      'ai',
+      'ai'
     ));
     setShowTeamSelector(false);
     setAppState('game_start');

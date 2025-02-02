@@ -1,15 +1,23 @@
 import { colorizeMessage } from '../utils/colors';
 import { CardType, TeamColor } from '../utils/game';
 import { LLMModel } from '../utils/models';
+import userLogo from '../assets/logos/user.svg';
 
 export type ChatMessage = {
-  model: LLMModel;
   message: string;
+  model: LLMModel | null;  // null for human players
   team: TeamColor;
-  cards?: CardType[];
+  cards: CardType[];
 };
 
 export function Chat({ message, team, model, cards }: ChatMessage) {
+  const getLogo = (model: LLMModel | null) => {
+    if (!model) {
+      return userLogo;  // Use user logo for human players
+    }
+    return model.logo;
+  };
+
   return (
     <div className='flex flex-col p-3'>
       {/* Model chat heading */}
@@ -17,8 +25,8 @@ export function Chat({ message, team, model, cards }: ChatMessage) {
         {/* Avatar logo */}
         <div className='flex-shrink-0'>
           <img
-            src={model.logo}
-            alt={model.short_name}
+            src={getLogo(model)}
+            alt={model?.short_name || 'User'}
             className={`h-6 w-6 rounded-full border-black p-1 ${
               team === 'red' ? 'bg-red-50' : 'bg-sky-50'
             }`}
@@ -28,7 +36,7 @@ export function Chat({ message, team, model, cards }: ChatMessage) {
         <span
           className={`text-sm font-semibold ${team === 'blue' ? 'text-sky-500' : 'text-rose-500'}`}
         >
-          {model.short_name}
+          {model?.short_name || 'User'}
         </span>
       </div>
 

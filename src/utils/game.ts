@@ -28,7 +28,7 @@ export type OperativeMove = {
 // Nested object type for team agents to track which LLM model is being used for each role
 export type TeamAgents = {
   [key in Role]: {
-    model: LLMModel;
+    model: PlayerType extends 'human' ? null : LLMModel;
     type: PlayerType;
   };
 };
@@ -71,20 +71,28 @@ export const initializeGameState = (): GameState => {
 
 // Add this function to allow setting up custom team configurations
 export const initializeGameStateWithPlayers = (
-  redSpymaster: PlayerType,
-  redOperative: PlayerType,
-  blueSpymaster: PlayerType,
-  blueOperative: PlayerType
+  redSpymaster: 'human' | 'ai',
+  redOperative: 'human' | 'ai',
+  blueSpymaster: 'ai',
+  blueOperative: 'ai'
 ): GameState => {
   const availableAgents = [...agents];
   
-  const pickAgent = (type: PlayerType): TeamAgents[Role] => {
+  const pickAgent = (type: PlayerType, isOperative: boolean): TeamAgents[Role] => {
     if (type === 'human') {
       return {
-        model: agents[0], // Use first agent as placeholder for human
+        model: null!, // No model needed for human players
         type: 'human'
       };
     }
+    // For AI players
+    if (isOperative) {
+      return {
+        model: agents[0], // Use first agent for operative
+        type: 'ai'
+      };
+    }
+    // For AI spymasters, pick randomly from remaining agents
     const randomIndex = Math.floor(Math.random() * availableAgents.length);
     return {
       model: availableAgents.splice(randomIndex, 1)[0],
@@ -96,12 +104,12 @@ export const initializeGameStateWithPlayers = (
     cards: drawNewCards(),
     agents: {
       red: {
-        spymaster: pickAgent(redSpymaster),
-        operative: pickAgent(redOperative),
+        spymaster: pickAgent(redSpymaster, false),
+        operative: pickAgent(redOperative, true),
       },
       blue: {
-        spymaster: pickAgent(blueSpymaster),
-        operative: pickAgent(blueOperative),
+        spymaster: pickAgent('ai', false),
+        operative: pickAgent('ai', true),
       },
     },
     currentTeam: 'red',
