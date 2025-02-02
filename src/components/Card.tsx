@@ -5,6 +5,9 @@ import { CardType } from '../utils/game.ts';
 
 type CardProps = CardType & {
   isSpymasterView: boolean;
+  isSelectable?: boolean;
+  isSelected?: boolean;
+  onToggleSelect?: (word: string) => void;
 };
 
 export default function Card({
@@ -13,14 +16,26 @@ export default function Card({
   isRevealed,
   isSpymasterView,
   wasRecentlyRevealed,
+  isSelectable = false,
+  isSelected = false,
+  onToggleSelect,
 }: CardProps) {
   return (
     <div
-      className={`relative transform transition-transform hover:scale-105 ${
+      onClick={() => isSelectable && !isRevealed && onToggleSelect?.(word)}
+      className={`relative transform transition-all duration-200 ${
+        isSelectable && !isRevealed ? 'cursor-pointer hover:scale-105' : ''
+      } ${
         wasRecentlyRevealed ? 'animate-[pulse_1.1s_ease-in-out_infinite]' : ''
-      } overflow-hidden rounded-lg`}
+      } overflow-hidden rounded-lg ${
+        isSelected ? 'ring-4 ring-yellow-400 scale-105 shadow-lg shadow-yellow-400/50' : ''
+      }`}
     >
       <img src={cardFrontImage} alt='Card background' className='w-full' />
+      {/* Selection overlay */}
+      {isSelected && !isRevealed && (
+        <div className="absolute inset-0 bg-yellow-400/20 rounded-lg" />
+      )}
       {/* Color overlay hint to reveal card color */}
       {isSpymasterView && color !== 'neutral' && !isRevealed && (
         <div

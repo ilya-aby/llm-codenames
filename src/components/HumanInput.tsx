@@ -5,14 +5,13 @@ interface HumanInputProps {
   role: Role;
   onSubmitMove: (move: SpymasterMove | OperativeMove) => void;
   currentClue?: { clueText: string; number: number };
-  words: string[];
+  selectedWords: string[];
 }
 
-export function HumanInput({ role, onSubmitMove, currentClue, words }: HumanInputProps) {
+export function HumanInput({ role, onSubmitMove, currentClue, selectedWords }: HumanInputProps) {
   const [clueText, setClueText] = useState('');
   const [clueNumber, setClueNumber] = useState('');
   const [reasoning, setReasoning] = useState('');
-  const [selectedWords, setSelectedWords] = useState<string[]>([]);
 
   if (role === 'spymaster') {
     return (
@@ -64,25 +63,6 @@ export function HumanInput({ role, onSubmitMove, currentClue, words }: HumanInpu
         Clue: {currentClue?.clueText}, {currentClue?.number}
       </h3>
       <div className="space-y-4">
-        <div className="grid grid-cols-5 gap-2">
-          {words.map((word) => (
-            <button
-              key={word}
-              onClick={() => {
-                if (selectedWords.includes(word)) {
-                  setSelectedWords(selectedWords.filter((w) => w !== word));
-                } else {
-                  setSelectedWords([...selectedWords, word]);
-                }
-              }}
-              className={`p-2 rounded ${
-                selectedWords.includes(word) ? 'bg-slate-400' : 'bg-slate-200'
-              }`}
-            >
-              {word}
-            </button>
-          ))}
-        </div>
         <textarea
           placeholder="Enter your reasoning (optional)"
           value={reasoning}
@@ -98,9 +78,10 @@ export function HumanInput({ role, onSubmitMove, currentClue, words }: HumanInpu
               });
             }
           }}
-          className="w-full bg-slate-200 text-slate-800 p-2 rounded font-bold hover:bg-slate-300"
+          disabled={selectedWords.length === 0}
+          className="w-full bg-slate-200 text-slate-800 p-2 rounded font-bold hover:bg-slate-300 disabled:opacity-50 disabled:hover:bg-slate-200"
         >
-          Submit Guesses
+          Submit Guesses ({selectedWords.length})
         </button>
       </div>
     </div>

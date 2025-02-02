@@ -24,6 +24,7 @@ export default function App() {
   const [isGamePaused, setIsGamePaused] = useState(true);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [showTeamSelector, setShowTeamSelector] = useState(true);
+  const [selectedWords, setSelectedWords] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchResponse = async () => {
@@ -99,6 +100,23 @@ export default function App() {
     }
   };
 
+  const handleWordSelect = (word: string) => {
+    setSelectedWords(prev => 
+      prev.includes(word) 
+        ? prev.filter(w => w !== word)
+        : [...prev, word]
+    );
+  };
+
+  const handleMove = (move: SpymasterMove | OperativeMove) => {
+    if (gameState.currentRole === 'spymaster') {
+      setGameState(updateGameStateFromSpymasterMove(gameState, move as SpymasterMove));
+    } else {
+      setGameState(updateGameStateFromOperativeMove(gameState, move as OperativeMove));
+    }
+    setSelectedWords([]);
+  };
+
   return (
     <div className='flex min-h-screen flex-col items-center justify-around gap-2 bg-gradient-to-br from-slate-800 to-slate-600 lg:flex-row'>
       {showTeamSelector ? (
@@ -122,11 +140,15 @@ export default function App() {
                 {gameState.cards.map((card, index) => (
                   <Card
                     key={index}
-                    word={card.word}
-                    color={card.color}
-                    isRevealed={card.isRevealed}
-                    wasRecentlyRevealed={card.wasRecentlyRevealed}
-                    isSpymasterView={true}
+                    {...card}
+                    isSpymasterView={gameState.currentRole === 'spymaster'}
+                    isSelectable={
+                      gameState.agents[gameState.currentTeam][gameState.currentRole].type === 'human' &&
+                      gameState.currentRole === 'operative' &&
+                      !card.isRevealed
+                    }
+                    isSelected={selectedWords.includes(card.word)}
+                    onToggleSelect={handleWordSelect}
                   />
                 ))}
               </div>
@@ -161,15 +183,9 @@ export default function App() {
               !isGamePaused && appState === 'ready_for_turn' && !gameState.gameWinner && (
               <HumanInput
                 role={gameState.currentRole}
-                onSubmitMove={(move) => {
-                  if (gameState.currentRole === 'spymaster') {
-                    setGameState(updateGameStateFromSpymasterMove(gameState, move as SpymasterMove));
-                  } else {
-                    setGameState(updateGameStateFromOperativeMove(gameState, move as OperativeMove));
-                  }
-                }}
+                onSubmitMove={handleMove}
                 currentClue={gameState.currentClue}
-                words={gameState.cards.filter(card => !card.isRevealed).map(card => card.word)}
+                selectedWords={selectedWords}
               />
             )}
             {gameState.chatHistory.map((message, index) => (
