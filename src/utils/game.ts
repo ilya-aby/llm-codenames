@@ -5,6 +5,7 @@ import { agents, LLMModel } from './models';
 export type TeamColor = 'red' | 'blue';
 export type CardColor = 'red' | 'blue' | 'black' | 'neutral';
 export type Role = 'spymaster' | 'operative';
+export type PlayerType = 'human' | 'ai';
 
 export type CardType = {
   word: string;
@@ -26,7 +27,10 @@ export type OperativeMove = {
 
 // Nested object type for team agents to track which LLM model is being used for each role
 export type TeamAgents = {
-  [key in Role]: LLMModel;
+  [key in Role]: {
+    model: LLMModel;
+    type: PlayerType;
+  };
 };
 
 export type GameAgents = {
@@ -57,6 +61,49 @@ export const initializeGameState = (): GameState => {
   return {
     cards: drawNewCards(),
     agents: selectRandomAgents(),
+    currentTeam: 'red',
+    currentRole: 'spymaster',
+    remainingRed: 9,
+    remainingBlue: 8,
+    chatHistory: [],
+  };
+};
+
+// Add this function to allow setting up custom team configurations
+export const initializeGameStateWithPlayers = (
+  redSpymaster: PlayerType,
+  redOperative: PlayerType,
+  blueSpymaster: PlayerType,
+  blueOperative: PlayerType
+): GameState => {
+  const availableAgents = [...agents];
+  
+  const pickAgent = (type: PlayerType): TeamAgents[Role] => {
+    if (type === 'human') {
+      return {
+        model: agents[0], // Use first agent as placeholder for human
+        type: 'human'
+      };
+    }
+    const randomIndex = Math.floor(Math.random() * availableAgents.length);
+    return {
+      model: availableAgents.splice(randomIndex, 1)[0],
+      type: 'ai'
+    };
+  };
+
+  return {
+    cards: drawNewCards(),
+    agents: {
+      red: {
+        spymaster: pickAgent(redSpymaster),
+        operative: pickAgent(redOperative),
+      },
+      blue: {
+        spymaster: pickAgent(blueSpymaster),
+        operative: pickAgent(blueOperative),
+      },
+    },
     currentTeam: 'red',
     currentRole: 'spymaster',
     remainingRed: 9,
@@ -108,7 +155,10 @@ const selectRandomAgents = (): GameAgents => {
 
   const pickRandomAgent = () => {
     const randomIndex = Math.floor(Math.random() * availableAgents.length);
-    return availableAgents.splice(randomIndex, 1)[0];
+    return {
+      model: availableAgents.splice(randomIndex, 1)[0],
+      type: 'ai'
+    };
   };
 
   return {
@@ -141,7 +191,7 @@ export function updateGameStateFromSpymasterMove(
   };
   newState.chatHistory.push({
     message: move.reasoning + '\n\nClue: ' + move.clue.toUpperCase() + ', ' + move.number,
-    model: currentState.agents[currentState.currentTeam].spymaster,
+    model: currentState.agents[currentState.currentTeam].spymaster.model,
     team: currentState.currentTeam,
     cards: currentState.cards,
   });
@@ -160,7 +210,7 @@ export function updateGameStateFromOperativeMove(
   const newState = { ...currentState };
   newState.chatHistory.push({
     message: move.reasoning + '\n\nGuesses: ' + move.guesses.join(', '),
-    model: currentState.agents[currentState.currentTeam].operative,
+    model: currentState.agents[currentState.currentTeam].operative.model,
     team: currentState.currentTeam,
     cards: currentState.cards,
   });

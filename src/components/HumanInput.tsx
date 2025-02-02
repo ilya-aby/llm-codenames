@@ -1,0 +1,108 @@
+import { useState } from 'react';
+import { Role, SpymasterMove, OperativeMove } from '../utils/game';
+
+interface HumanInputProps {
+  role: Role;
+  onSubmitMove: (move: SpymasterMove | OperativeMove) => void;
+  currentClue?: { clueText: string; number: number };
+  words: string[];
+}
+
+export function HumanInput({ role, onSubmitMove, currentClue, words }: HumanInputProps) {
+  const [clueText, setClueText] = useState('');
+  const [clueNumber, setClueNumber] = useState('');
+  const [reasoning, setReasoning] = useState('');
+  const [selectedWords, setSelectedWords] = useState<string[]>([]);
+
+  if (role === 'spymaster') {
+    return (
+      <div className="p-4 bg-slate-700 rounded-lg">
+        <h3 className="text-lg font-bold text-slate-200 mb-4">Give a Clue</h3>
+        <div className="space-y-4">
+          <input
+            type="text"
+            placeholder="Enter your clue word"
+            value={clueText}
+            onChange={(e) => setClueText(e.target.value)}
+            className="w-full p-2 rounded"
+          />
+          <input
+            type="number"
+            placeholder="Enter number of related words"
+            value={clueNumber}
+            onChange={(e) => setClueNumber(e.target.value)}
+            className="w-full p-2 rounded"
+          />
+          <textarea
+            placeholder="Enter your reasoning (optional)"
+            value={reasoning}
+            onChange={(e) => setReasoning(e.target.value)}
+            className="w-full p-2 rounded"
+          />
+          <button
+            onClick={() => {
+              if (clueText && clueNumber) {
+                onSubmitMove({
+                  clue: clueText,
+                  number: parseInt(clueNumber),
+                  reasoning: reasoning || 'No reasoning provided.',
+                });
+              }
+            }}
+            className="w-full bg-slate-200 text-slate-800 p-2 rounded font-bold hover:bg-slate-300"
+          >
+            Submit Clue
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-4 bg-slate-700 rounded-lg">
+      <h3 className="text-lg font-bold text-slate-200 mb-4">
+        Clue: {currentClue?.clueText}, {currentClue?.number}
+      </h3>
+      <div className="space-y-4">
+        <div className="grid grid-cols-5 gap-2">
+          {words.map((word) => (
+            <button
+              key={word}
+              onClick={() => {
+                if (selectedWords.includes(word)) {
+                  setSelectedWords(selectedWords.filter((w) => w !== word));
+                } else {
+                  setSelectedWords([...selectedWords, word]);
+                }
+              }}
+              className={`p-2 rounded ${
+                selectedWords.includes(word) ? 'bg-slate-400' : 'bg-slate-200'
+              }`}
+            >
+              {word}
+            </button>
+          ))}
+        </div>
+        <textarea
+          placeholder="Enter your reasoning (optional)"
+          value={reasoning}
+          onChange={(e) => setReasoning(e.target.value)}
+          className="w-full p-2 rounded"
+        />
+        <button
+          onClick={() => {
+            if (selectedWords.length > 0) {
+              onSubmitMove({
+                guesses: selectedWords,
+                reasoning: reasoning || 'No reasoning provided.',
+              });
+            }
+          }}
+          className="w-full bg-slate-200 text-slate-800 p-2 rounded font-bold hover:bg-slate-300"
+        >
+          Submit Guesses
+        </button>
+      </div>
+    </div>
+  );
+} 
