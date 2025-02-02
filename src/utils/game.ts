@@ -251,13 +251,9 @@ export function updateGameStateFromOperativeMove(
   }).filter((card): card is CardType => card !== null);
 
   // Process all valid guesses
-  let shouldEndTurn = false;
   for (const card of guessedCards) {
     card.isRevealed = true;
     card.wasRecentlyRevealed = true;
-
-    newState.previousRole = currentState.currentRole;
-    newState.previousTeam = currentState.currentTeam;
 
     // Assassin card instantly loses the game
     if (card.color === 'black') {
@@ -277,23 +273,15 @@ export function updateGameStateFromOperativeMove(
       newState.remainingBlue--;
       if (newState.remainingBlue === 0) {
         newState.gameWinner = 'blue';
-        resetAnimations(newState.cards);
         return newState;
       }
     }
-
-    // If we guessed a card that isn't our team's color, mark to end turn
-    if (card.color !== currentState.currentTeam) {
-      shouldEndTurn = true;
-    }
   }
 
-  // End turn if we guessed wrong or if we're done guessing
-  if (shouldEndTurn || guessedCards.length >= ((currentState.currentClue?.number || 0) + 1)) {
-    newState.currentRole = 'spymaster';
-    newState.currentTeam = currentState.currentTeam === 'red' ? 'blue' : 'red';
-    newState.currentClue = undefined;
-  }
+  // Always switch to other team's spymaster
+  newState.currentRole = 'spymaster';
+  newState.currentTeam = currentState.currentTeam === 'red' ? 'blue' : 'red';
+  newState.currentClue = undefined;
 
   return newState;
 }

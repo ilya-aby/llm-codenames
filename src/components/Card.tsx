@@ -75,7 +75,7 @@ export default function Card({
       <div className='absolute inset-0 flex items-center justify-center'>
         <span
           className={`z-20 mt-[30%] font-bold tracking-tighter ${
-            color === 'black' && shouldShowColor ? 'text-slate-50' : 'text-slate-800'
+            color === 'black' && isRevealed ? 'text-slate-50' : 'text-slate-800'
           } ${word.length >= 9 ? 'text-[0.6rem] sm:text-base' : 'text-[0.7rem] sm:text-base'}`}
         >
           {word}
