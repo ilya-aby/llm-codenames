@@ -25,12 +25,12 @@ export const agents: LLMModel[] = [
     short_name: '4o mini',
     logo: openaiLogo,
   },
-  {
-    openrouter_model_id: 'openai/o3-mini',
-    model_name: 'OpenAI o3-mini',
-    short_name: 'o3 mini',
-    logo: openaiLogo,
-  },
+  // {
+  //   openrouter_model_id: 'openai/o3-mini',
+  //   model_name: 'OpenAI o3-mini',
+  //   short_name: 'o3 mini',
+  //   logo: openaiLogo,
+  // },
   {
     openrouter_model_id: 'google/gemini-pro-1.5',
     model_name: 'Gemini Pro 1.5',
