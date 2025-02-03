@@ -65,7 +65,7 @@ export default function App() {
   }, [gameState, appState]);
 
   return (
-    <div className='flex min-h-screen flex-col items-center justify-around gap-2 bg-gradient-to-br from-slate-800 to-slate-600 lg:flex-row'>
+    <div className='flex min-h-screen flex-col items-center justify-around gap-2 bg-gradient-to-br from-slate-800 to-slate-600 antialiased lg:flex-row'>
       {/* Left panel: Scoreboard + Game Board + Game Controls */}
       <div className='flex w-full flex-col items-center gap-y-6 sm:mt-4 lg:w-2/3 lg:gap-y-8'>
         {appState === 'error' && (

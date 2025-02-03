@@ -25,7 +25,7 @@ export function ModelPill({
         }`}
       />
       {/* Model name */}
-      <span className={`text-sm font-semibold`}>{model.short_name}</span>
+      <span className={`text-sm font-bold`}>{model.short_name}</span>
     </span>
   );
 }
