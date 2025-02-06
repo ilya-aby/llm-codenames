@@ -38,9 +38,9 @@ export const agents: LLMModel[] = [
     logo: geminiLogo,
   },
   {
-    openrouter_model_id: 'google/gemini-flash-1.5',
-    model_name: 'Gemini Flash 1.5',
-    short_name: 'Flash 1.5',
+    openrouter_model_id: 'google/gemini-2.0-flash-001',
+    model_name: 'Gemini Flash 2.0',
+    short_name: 'Flash 2.0',
     logo: geminiLogo,
   },
   {
