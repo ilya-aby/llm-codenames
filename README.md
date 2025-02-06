@@ -6,7 +6,7 @@ An implementation of the board game [Codenames](<https://en.wikipedia.org/wiki/C
 
 ## Features
 
-- Uses Cloudflare Workers as a proxy to make LLM calls. Proxy is defined [here](https://github.com/ilya-aby/llm-proxy) with instructions on how to deploy it to Cloudflare
+- Uses Cloudflare Workers as a proxy to make LLM calls
 - Uses OpenRouter to enable hot-swapping of LLM models from different providers
 
 ## Future Work
