@@ -44,7 +44,7 @@ export const agents: LLMModel[] = [
     logo: geminiLogo,
   },
   {
-    openrouter_model_id: 'anthropic/claude-3.5-sonnet',
+    openrouter_model_id: 'anthropic/claude-3.7-sonnet',
     model_name: 'Claude 3.5 Sonnet',
     short_name: 'Sonnet 3.5',
     logo: anthropicLogo,
