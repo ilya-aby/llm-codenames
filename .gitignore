@@ -1,6 +1,7 @@
 # For development
 /ignore
 .env
+.playwright-cli/
 
 # Logs
 logs
