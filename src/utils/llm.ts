@@ -65,7 +65,10 @@ export async function fetchLLMResponse(
     });
 
     if (!response.ok) {
-      throw new Error(`API returned ${response.status}: ${response.statusText}`);
+      const errorBody = (await response.text()).trim();
+      throw new Error(
+        `API returned ${response.status}: ${response.statusText}${errorBody ? ` - ${errorBody}` : ''}`,
+      );
     }
 
     const data = await response.json();
