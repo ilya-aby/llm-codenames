@@ -13,6 +13,16 @@ export type LLMModel = {
   logo: string;
 };
 
+const kimiK2_6: LLMModel = {
+  openrouter_model_id: 'moonshotai/kimi-k2.6',
+  model_name: 'Kimi K2.6',
+  short_name: 'K2.6',
+  logo: moonshotLogo,
+};
+
+// Disabled models are kept here so re-enabling them does not lose ID or logo wiring.
+export const disabledAgents: LLMModel[] = [kimiK2_6];
+
 export const agents: LLMModel[] = [
   {
     openrouter_model_id: 'openai/gpt-5.5',
@@ -61,11 +71,5 @@ export const agents: LLMModel[] = [
     model_name: 'DeepSeek V4 Pro',
     short_name: 'V4 Pro',
     logo: deepseekLogo,
-  },
-  {
-    openrouter_model_id: 'moonshotai/kimi-k2.6',
-    model_name: 'Kimi K2.6',
-    short_name: 'K2.6',
-    logo: moonshotLogo,
   },
 ];
